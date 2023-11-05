@@ -1,6 +1,45 @@
 {
     "configurations": [
         {
+            "name": "vs2022-x64-Debug",
+            "generator": "Visual Studio 17 2022 Win64",
+            "configurationType": "Debug",
+            "buildRoot": "${projectDir}\\build-win-${name}",
+            "installRoot": "${projectDir}\\build-win-${name}\\prefix",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "-v:d",
+            "ctestCommandArgs": "",
+            "inheritEnvironments": [
+                "msvc_x64_x64"
+            ]
+        },
+        {
+            "name": "vs2022-x64-Release",
+            "generator": "Visual Studio 17 2022 Win64",
+            "configurationType": "Release",
+            "buildRoot": "${projectDir}\\build-win-${name}",
+            "installRoot": "${projectDir}\\build-win-${name}\\prefix",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "-v:d",
+            "ctestCommandArgs": "",
+            "inheritEnvironments": [
+                "msvc_x64_x64"
+            ]
+        },
+        {
+            "name": "vs2022-x64-RelWithDebInfo",
+            "generator": "Visual Studio 17 2022 Win64",
+            "configurationType": "RelWithDebInfo",
+            "buildRoot": "${projectDir}\\build-win-${name}",
+            "installRoot": "${projectDir}\\build-win-${name}\\prefix",
+            "cmakeCommandArgs": "",
+            "buildCommandArgs": "-v:d",
+            "ctestCommandArgs": "",
+            "inheritEnvironments": [
+                "msvc_x64_x64"
+            ]
+        },
+        {
             "name": "vs2019-x64-Debug",
             "generator": "Visual Studio 16 2019 Win64",
             "configurationType": "Debug",

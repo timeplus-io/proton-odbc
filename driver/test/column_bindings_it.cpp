@@ -34,12 +34,12 @@ TEST_P(ColumnArrayBindingsTest, ColumnWise) {
     const std::size_t total_rows_expected = std::get<1>(GetParam());
     const std::string query_orig = R"SQL(
 SELECT
-    CAST(number, 'Int32') AS col1,
-    CAST(CAST(number, 'String'), 'FixedString(30)') AS col2,
-    CAST(number, 'Float64') AS col3,
-    CAST(if((number % 8) = 3, NULL, repeat('x', number % 41)), 'Nullable(String)') AS col4,
-    CAST(number, 'UInt64') AS col5,
-    CAST(number, 'Float32') AS col6
+    cast(number, 'int32') AS col1,
+    cast(cast(number, 'string'), 'fixed_string(30)') AS col2,
+    cast(number, 'float64') AS col3,
+    cast(if((number % 8) = 3, NULL, repeat('x', number % 41)), 'nullable(string)') AS col4,
+    cast(number, 'uint64') AS col5,
+    cast(number, 'float32') AS col6
 FROM numbers(
     )SQL" + std::to_string(total_rows_expected) + ")";
 
@@ -279,12 +279,12 @@ TEST_P(ColumnArrayBindingsTest, RowWise) {
     const std::size_t total_rows_expected = std::get<1>(GetParam());
     const std::string query_orig = R"SQL(
 SELECT
-    CAST(number, 'Int32') AS col1,
-    CAST(CAST(number, 'String'), 'FixedString(30)') AS col2,
-    CAST(number, 'Float64') AS col3,
-    CAST(if((number % 8) = 3, NULL, repeat('x', number % 41)), 'Nullable(String)') AS col4,
-    CAST(number, 'UInt64') AS col5,
-    CAST(number, 'Float32') AS col6
+    cast(number, 'int32') AS col1,
+    cast(cast(number, 'string'), 'fixed_string(30)') AS col2,
+    cast(number, 'float64') AS col3,
+    cast(if((number % 8) = 3, NULL, repeat('x', number % 41)), 'nullable(string)') AS col4,
+    cast(number, 'uint64') AS col5,
+    cast(number, 'float32') AS col6
 FROM numbers(
     )SQL" + std::to_string(total_rows_expected) + ")";
 

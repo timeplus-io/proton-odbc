@@ -3,90 +3,90 @@
 #include <gtest/gtest.h>
 
 TEST(EscapeSequencesCase, ParseIdent1) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(abc, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(abc))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(abc, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(abc))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent2) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`abc`, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(`abc`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`abc`, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(`abc`))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent3) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`0 a b $ c`, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(`0 a b $ c`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`0 a b $ c`, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(`0 a b $ c`))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent4) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(abc.`0 a b $ c`, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(abc.`0 a b $ c`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(abc.`0 a b $ c`, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(abc.`0 a b $ c`))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent5) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`0 a b $ c`.abc, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(`0 a b $ c`.abc))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`0 a b $ c`.abc, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(`0 a b $ c`.abc))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent6) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(abc.`0 a b $ c`.abc, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(abc.`0 a b $ c`.abc))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(abc.`0 a b $ c`.abc, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(abc.`0 a b $ c`.abc))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent7) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`0 a b $ c`.abc.`0 a b $ c`, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(`0 a b $ c`.abc.`0 a b $ c`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`0 a b $ c`.abc.`0 a b $ c`, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(`0 a b $ c`.abc.`0 a b $ c`))");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative1) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(0 a b $ c, SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(0 a b $ c, SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(0 a b $ c, SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(0 a b $ c, SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative2) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(.abc, SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(.abc, SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(.abc, SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(.abc, SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative3) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(.`abc`, SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(.`abc`, SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(.`abc`, SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(.`abc`, SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative4) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(abc., SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(abc., SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(abc., SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(abc., SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative5) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`abc`., SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(`abc`., SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`abc`., SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(`abc`., SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseIdent_Negative6) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(abc..abc, SQL_BIGINT)})"),
-        "SELECT SUM({fn CONVERT(abc..abc, SQL_BIGINT)})");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(abc..abc, SQL_BIGINT)})"),
+        "SELECT sum({fn CONVERT(abc..abc, SQL_BIGINT)})");
 }
 
 TEST(EscapeSequencesCase, ParseConvert1) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT(1, SQL_BIGINT)}"), "SELECT toInt64(1)");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT(1, SQL_BIGINT)}"), "SELECT to_int64(1)");
 }
 
 TEST(EscapeSequencesCase, ParseConvert2) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT(-1.2, SQL_BIGINT)}"), "SELECT toInt64(-1.2)");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT(-1.2, SQL_BIGINT)}"), "SELECT to_int64(-1.2)");
 }
 
 TEST(EscapeSequencesCase, ParseConvert3) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(amount, SQL_BIGINT)})"), "SELECT SUM(toInt64(amount))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(amount, SQL_BIGINT)})"), "SELECT sum(to_int64(amount))");
 }
 
 TEST(EscapeSequencesCase, ParseConvert4) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(Custom_SQL_Query.amount, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(Custom_SQL_Query.amount))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(Custom_SQL_Query.amount, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(Custom_SQL_Query.amount))");
 }
 
 TEST(EscapeSequencesCase, ParseConvert5) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT SUM({fn CONVERT(`Custom_SQL_Query`.`amount`, SQL_BIGINT)})"),
-        "SELECT SUM(toInt64(`Custom_SQL_Query`.`amount`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT sum({fn CONVERT(`Custom_SQL_Query`.`amount`, SQL_BIGINT)})"),
+        "SELECT sum(to_int64(`Custom_SQL_Query`.`amount`))");
 }
 
 TEST(EscapeSequencesCase, ParseConvert6_0) {
@@ -94,12 +94,12 @@ TEST(EscapeSequencesCase, ParseConvert6_0) {
 }
 
 TEST(EscapeSequencesCase, ParseConvert6) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT({fn ROUND(1.1 + 2.4, 1)}, SQL_BIGINT)}"), "SELECT toInt64(round(1.1 + 2.4, 1))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn CONVERT({fn ROUND(1.1 + 2.4, 1)}, SQL_BIGINT)}"), "SELECT to_int64(round(1.1 + 2.4, 1))");
 }
 
 TEST(EscapeSequencesCase, ParseConvert6_1) {
     ASSERT_EQ(replaceEscapeSequences("SELECT  {fn   CONVERT(  {fn   ROUND(  1.1  +  2.4  ,  1  )  }  ,  SQL_BIGINT  )  }"),
-        "SELECT  toInt64(round(  1.1  +  2.4  ,  1  )  )");
+        "SELECT  to_int64(round(  1.1  +  2.4  ,  1  )  )");
 }
 
 
@@ -154,10 +154,10 @@ TEST(EscapeSequencesCase, ParseAbs4) {
 }
 
 TEST(EscapeSequencesCase, ParseTruncate) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT CAST({fn TRUNCATE(1.1 + 2.4, 1)} AS INTEGER) AS `yr_date_ok`"),
-        "SELECT CAST(trunc(1.1 + 2.4, 1) AS INTEGER) AS `yr_date_ok`");
+    ASSERT_EQ(replaceEscapeSequences("SELECT cast({fn TRUNCATE(1.1 + 2.4, 1)} AS INTEGER) AS `yr_date_ok`"),
+        "SELECT cast(trunc(1.1 + 2.4, 1) AS INTEGER) AS `yr_date_ok`");
     //ASSERT_EQ(
-    //    replaceEscapeSequences("SELECT CAST({fn TRUNCATE(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0)} AS INTEGER) AS `yr_date_ok`"),
+    //    replaceEscapeSequences("SELECT cast({fn TRUNCATE(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0)} AS INTEGER) AS `yr_date_ok`"),
     //          "TODO: convert extract() function"
     //);
 }
@@ -168,53 +168,53 @@ TEST(EscapeSequencesCase, ParseCurdate1) {
 
 
 TEST(EscapeSequencesCase, ParseTimestampdiff2) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPDIFF(SQL_TSI_DAY,CAST(`test`.`odbc1`.`datetime` AS DATE),{fn CURDATE()} )}"),
-        "SELECT dateDiff('day',CAST(`test`.`odbc1`.`datetime` AS DATE),today() )");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPDIFF(SQL_TSI_DAY,cast(`test`.`odbc1`.`datetime` AS DATE),{fn CURDATE()} )}"),
+        "SELECT date_diff('day',cast(`test`.`odbc1`.`datetime` AS DATE),today() )");
 }
 
 TEST(EscapeSequencesCase, Parsetimestampdiff) {
     ASSERT_EQ(replaceEscapeSequences(
-                  "SELECT {fn TIMESTAMPDIFF(SQL_TSI_DAY,CAST(`activity`.`min_activation_yabrowser` AS DATE),CAST(`activity`.`date` AS "
-                  "DATE))} AS `Calculation_503558746242125826`, SUM({fn CONVERT(1, SQL_BIGINT)}) AS `sum_Number_of_Records_ok`"),
-        "SELECT dateDiff('day',CAST(`activity`.`min_activation_yabrowser` AS DATE),CAST(`activity`.`date` AS DATE)) AS "
-        "`Calculation_503558746242125826`, SUM(toInt64(1)) AS `sum_Number_of_Records_ok`");
+                  "SELECT {fn TIMESTAMPDIFF(SQL_TSI_DAY,cast(`activity`.`min_activation_yabrowser` AS DATE),cast(`activity`.`date` AS "
+                  "DATE))} AS `Calculation_503558746242125826`, sum({fn CONVERT(1, SQL_BIGINT)}) AS `sum_Number_of_Records_ok`"),
+        "SELECT date_diff('day',cast(`activity`.`min_activation_yabrowser` AS DATE),cast(`activity`.`date` AS DATE)) AS "
+        "`Calculation_503558746242125826`, sum(to_int64(1)) AS `sum_Number_of_Records_ok`");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd1) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_YEAR, 1, {fn CURDATE()})}"), "SELECT addYears(today(), 1)");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_YEAR, 1, {fn CURDATE()})}"), "SELECT add_years(today(), 1)");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd2) {
     ASSERT_EQ(replaceEscapeSequences("SELECT {fn  TIMESTAMPADD(  SQL_TSI_YEAR  ,  1  ,  {fn  CURDATE()  }  )  }"),
-        "SELECT addYears(today()  , 1)");
+        "SELECT add_years(today()  , 1)");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd3) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_DAY,1,CAST({fn CURRENT_TIMESTAMP(0)} AS DATE))}"),
-        "SELECT addDays(CAST(now() AS DATE), 1)");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_DAY,1,cast({fn CURRENT_TIMESTAMP(0)} AS DATE))}"),
+        "SELECT add_days(cast(now() AS DATE), 1)");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd4) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD( SQL_TSI_DAY , 1 , CAST( {fn CURRENT_TIMESTAMP( 0 ) }  AS  DATE ) ) } "),
-        "SELECT addDays(CAST( now()  AS  DATE ), 1) ");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD( SQL_TSI_DAY , 1 , cast( {fn CURRENT_TIMESTAMP( 0 ) }  AS  DATE ) ) } "),
+        "SELECT add_days(cast( now()  AS  DATE ), 1) ");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd5) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_DAY, CAST(CAST(1 AS DATE) AS DATE), 1)}"),
-        "SELECT addDays(1, CAST(CAST(1 AS DATE) AS DATE))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_DAY, cast(cast(1 AS DATE) AS DATE), 1)}"),
+        "SELECT add_days(1, cast(cast(1 AS DATE) AS DATE))");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd6) {
     ASSERT_EQ(
         replaceEscapeSequences(
-            "SELECT {fn TIMESTAMPADD(SQL_TSI_DAY,(({fn MOD(({fn DAYOFWEEK(CAST(`publishers_report`.`install_date` AS DATE))}), 7)})),1)}"),
-        "SELECT addDays(1, ((modulo((if(toDayOfWeek(CAST(`publishers_report`.`install_date` AS DATE)) = 7, 1, "
-        "toDayOfWeek(CAST(`publishers_report`.`install_date` AS DATE)) + 1)), 7))))");
+            "SELECT {fn TIMESTAMPADD(SQL_TSI_DAY,(({fn MOD(({fn DAYOFWEEK(cast(`publishers_report`.`install_date` AS DATE))}), 7)})),1)}"),
+        "SELECT add_days(1, ((modulo((if(to_day_of_week(cast(`publishers_report`.`install_date` AS DATE)) = 7, 1, "
+        "to_day_of_week(cast(`publishers_report`.`install_date` AS DATE)) + 1)), 7))))");
 }
 
 TEST(EscapeSequencesCase, ParseTimestampadd7) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_HOUR,EXTRACT(HOUR FROM `abc`.`xyz`),CAST(`klm`.`nop` AS DATE))}"),
-        "SELECT addHours(CAST(`klm`.`nop` AS DATE), EXTRACT(HOUR FROM `abc`.`xyz`))");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn TIMESTAMPADD(SQL_TSI_HOUR,EXTRACT(HOUR FROM `abc`.`xyz`),cast(`klm`.`nop` AS DATE))}"),
+        "SELECT add_hours(cast(`klm`.`nop` AS DATE), EXTRACT(HOUR FROM `abc`.`xyz`))");
 }
 
 TEST(EscapeSequencesCase, ParseCurrentTimestamp1) {
@@ -226,31 +226,31 @@ TEST(EscapeSequencesCase, ParseCurrentTimestamp2) {
 
 TEST(EscapeSequencesCase, ParseExtract1) {
     ASSERT_EQ(replaceEscapeSequences(
-                  "SELECT CAST({fn TRUNCATE(EXTRACT(YEAR FROM `odbc1`.`date`),0)} AS INTEGER) AS `yr_date_ok` FROM `test`.`odbc1`"),
-        "SELECT CAST(trunc(EXTRACT(YEAR FROM `odbc1`.`date`),0) AS INTEGER) AS `yr_date_ok` FROM `test`.`odbc1`");
+                  "SELECT cast({fn TRUNCATE(EXTRACT(YEAR FROM `odbc1`.`date`),0)} AS INTEGER) AS `yr_date_ok` FROM `test`.`odbc1`"),
+        "SELECT cast(trunc(EXTRACT(YEAR FROM `odbc1`.`date`),0) AS INTEGER) AS `yr_date_ok` FROM `test`.`odbc1`");
 }
 
 TEST(EscapeSequencesCase, ParseExtract2) {
     ASSERT_EQ(
-        replaceEscapeSequences("SELECT CAST({fn TRUNCATE(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0)} AS INTEGER) AS `yr_date_ok`"),
-        "SELECT CAST(trunc(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0) AS INTEGER) AS `yr_date_ok`"
-        //"SELECT CAST(trunc(toYear(`Custom_SQL_Query`.`date`), 0) AS INTEGER) AS `yr_date_ok`"
+        replaceEscapeSequences("SELECT cast({fn TRUNCATE(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0)} AS INTEGER) AS `yr_date_ok`"),
+        "SELECT cast(trunc(EXTRACT(YEAR FROM `Custom_SQL_Query`.`date`),0) AS INTEGER) AS `yr_date_ok`"
+        //"SELECT cast(trunc(toYear(`Custom_SQL_Query`.`date`), 0) AS INTEGER) AS `yr_date_ok`"
     );
 }
 
 TEST(EscapeSequencesCase, ParseQuarter) {
     ASSERT_EQ(replaceEscapeSequences("SELECT {fn QUARTER(`Custom_SQL_Query`.`date`)} AS `qr_sentDate_ok`"),
-        "SELECT toQuarter(`Custom_SQL_Query`.`date`) AS `qr_sentDate_ok`");
+        "SELECT to_quarter(`Custom_SQL_Query`.`date`) AS `qr_sentDate_ok`");
 }
 
 TEST(EscapeSequencesCase, ParseDayOfWeek1) {
     ASSERT_EQ(replaceEscapeSequences("SELECT {fn DAYOFWEEK(`Custom_SQL_Query`.`date`)} AS `dw_sentDate_ok`"),
-        "SELECT if(toDayOfWeek(`Custom_SQL_Query`.`date`) = 7, 1, toDayOfWeek(`Custom_SQL_Query`.`date`) + 1) AS `dw_sentDate_ok`");
+        "SELECT if(to_day_of_week(`Custom_SQL_Query`.`date`) = 7, 1, to_day_of_week(`Custom_SQL_Query`.`date`) + 1) AS `dw_sentDate_ok`");
 }
 
 TEST(EscapeSequencesCase, ParseDayOfWeek2) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {fn DAYOFWEEK(CAST('2018-04-15' AS DATE))}, 1, 'sun'"),
-        "SELECT if(toDayOfWeek(CAST('2018-04-15' AS DATE)) = 7, 1, toDayOfWeek(CAST('2018-04-15' AS DATE)) + 1), 1, 'sun'");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {fn DAYOFWEEK(cast('2018-04-15' AS DATE))}, 1, 'sun'"),
+        "SELECT if(to_day_of_week(cast('2018-04-15' AS DATE)) = 7, 1, to_day_of_week(cast('2018-04-15' AS DATE)) + 1), 1, 'sun'");
 }
 
 
@@ -263,30 +263,30 @@ TEST(EscapeSequencesCase, ParseCurrentTimestamp) {
 TEST(EscapeSequencesCase, ParseComplexDateExpr) {
     ASSERT_EQ(
         replaceEscapeSequences(
-            "SELECT CAST({fn TRUNCATE(EXTRACT(YEAR FROM {fn TIMESTAMPADD(SQL_TSI_DAY,(-1 * ({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),CAST(`EmailDataD`.`sentDate` AS DATE))}),0)} AS INTEGER) AS `yr_Calculation_ok`"),
-        "SELECT CAST(trunc(toYear(addDays(CAST(`EmailDataD`.`sentDate` AS DATE), (-1 *(toDayOfWeek(`EmailDataD`.`sentDate`) - 1)))), 0) AS INTEGER) AS `yr_Calculation_ok`"
+            "SELECT cast({fn TRUNCATE(EXTRACT(YEAR FROM {fn TIMESTAMPADD(SQL_TSI_DAY,(-1 * ({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),cast(`EmailDataD`.`sentDate` AS DATE))}),0)} AS INTEGER) AS `yr_Calculation_ok`"),
+        "SELECT cast(trunc(toYear(add_days(cast(`EmailDataD`.`sentDate` AS DATE), (-1 *(to_day_of_week(`EmailDataD`.`sentDate`) - 1)))), 0) AS INTEGER) AS `yr_Calculation_ok`"
     );
 }
 
 TEST(EscapeSequencesCase, ParseComplexDateExpr2) {
     ASSERT_EQ(
         replaceEscapeSequences(
-            "WHERE (({fn TIMESTAMPADD(SQL_TSI_DAY,(-1 * ({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),CAST(`EmailDataD`.`sentDate` AS DATE))} >= {ts '2017-01-01 00:00:00'}) AND ({fn TIMESTAMPADD(SQL_TSI_DAY,(-1 *({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),CAST(`EmailDataD`.`sentDate` AS DATE))} < {ts '2018-01-01 00:00:00'}))"),
-        "WHERE ((addDays(CAST(`EmailDataD`.`sentDate` AS DATE), (-1 *(toDayOfWeek(`EmailDataD`.`sentDate`) - 1))) >= toDateTime('2017-01-01 00:00:00')) AND (addDays(CAST(`EmailDataD`.`sentDate` AS DATE), (-1 *(toDayOfWeek(`EmailDataD`.`sentDate`) - 1))) < toDateTime('2018-01-01 00:00:00')))"
+            "WHERE (({fn TIMESTAMPADD(SQL_TSI_DAY,(-1 * ({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),cast(`EmailDataD`.`sentDate` AS DATE))} >= {ts '2017-01-01 00:00:00'}) AND ({fn TIMESTAMPADD(SQL_TSI_DAY,(-1 *({fn DAYOFWEEK(`EmailDataD`.`sentDate`)} - 1)),cast(`EmailDataD`.`sentDate` AS DATE))} < {ts '2018-01-01 00:00:00'}))"),
+        "WHERE ((add_days(cast(`EmailDataD`.`sentDate` AS DATE), (-1 *(to_day_of_week(`EmailDataD`.`sentDate`) - 1))) >= to_dateTime('2017-01-01 00:00:00')) AND (add_days(cast(`EmailDataD`.`sentDate` AS DATE), (-1 *(to_day_of_week(`EmailDataD`.`sentDate`) - 1))) < to_dateTime('2018-01-01 00:00:00')))"
     );
 }
 */
 
 TEST(EscapeSequencesCase, DateTime) {
-    ASSERT_EQ(replaceEscapeSequences("SELECT {d '2017-01-01'}"), "SELECT toDate('2017-01-01')");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {d '2017-01-01'}"), "SELECT to_date('2017-01-01')");
 
-    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017-01-01 10:01:01'}"), "SELECT toDateTime('2017-01-01 10:01:01')");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017-01-01 10:01:01'}"), "SELECT to_datetime('2017-01-01 10:01:01')");
 
     // We cutting off milliseconds from timestamp because CH server
     // doesn't support them.
-    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017-01-01 10:01:01.555'}"), "SELECT toDateTime('2017-01-01 10:01:01')");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017-01-01 10:01:01.555'}"), "SELECT to_datetime('2017-01-01 10:01:01')");
     // Strange date format. Symbols after last dot shouldn't be cutted off.
-    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017.01.01 10:01:01'}"), "SELECT toDateTime('2017.01.01 10:01:01')");
+    ASSERT_EQ(replaceEscapeSequences("SELECT {ts '2017.01.01 10:01:01'}"), "SELECT to_datetime('2017.01.01 10:01:01')");
 }
 
 TEST(EscapeSequencesCase, LOCATE) {
@@ -295,10 +295,10 @@ TEST(EscapeSequencesCase, LOCATE) {
 }
 
 TEST(EscapeSequencesCase, LCASE) {
-    ASSERT_EQ(replaceEscapeSequences("{fn LCASE(`dm_ExperimentsData`.`Campaign`)}"), "lowerUTF8(`dm_ExperimentsData`.`Campaign`)");
+    ASSERT_EQ(replaceEscapeSequences("{fn LCASE(`dm_ExperimentsData`.`Campaign`)}"), "lower_utf8(`dm_ExperimentsData`.`Campaign`)");
 }
 
 TEST(EscapeSequencesCase, LTRIM) {
     ASSERT_EQ(replaceEscapeSequences("{fn LTRIM(`dm_ExperimentsData`.`Campaign`)}"),
-        "replaceRegexpOne(`dm_ExperimentsData`.`Campaign`, '^\\\\s+', '')");
+        "replace_regexp_one(`dm_ExperimentsData`.`Campaign`, '^\\\\s+', '')");
 }

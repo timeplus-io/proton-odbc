@@ -3,9 +3,14 @@
 /build-*
 
 .vs/
+**/.vs/
 
 CMakeFiles/
 CMakeCache.txt
 
 __pycache__/
 *.py[cod]
+.idea/
+**/.idea/
+.vscode/
+**/.vscode/

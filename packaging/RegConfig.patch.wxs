@@ -16,7 +16,7 @@
         <RegistryKey ForceCreateOnInstall="yes" Id="AnsiOdbcDsnRegInfo" Key="SOFTWARE\ODBC\ODBC.INI\ClickHouse DSN (ANSI)" Root="HKLM">
             <RegistryValue Name="Description" Type="string" Value="DSN (localhost) for ClickHouse ODBC Driver (ANSI)"/>
             <RegistryValue Name="Driver" Type="string" Value="ClickHouse ODBC Driver (ANSI)"/>
-            <RegistryValue Name="Url" Type="string" Value="https://default:password@localhost:8443/query?database=default"/>
+            <RegistryValue Name="Url" Type="string" Value="http://example:3218"/>
         </RegistryKey>
         <RegistryKey ForceCreateOnInstall="yes" Id="AnsiOdbcDsnRegInstalled" Key="SOFTWARE\ODBC\ODBC.INI\ODBC Data Sources" Root="HKLM">
             <RegistryValue Name="ClickHouse DSN (ANSI)" Type="string" Value="ClickHouse ODBC Driver (ANSI)"/>
@@ -39,7 +39,7 @@
         <RegistryKey ForceCreateOnInstall="yes" Id="UnicodeOdbcDsnRegInfo" Key="SOFTWARE\ODBC\ODBC.INI\ClickHouse DSN (Unicode)" Root="HKLM">
             <RegistryValue Name="Description" Type="string" Value="DSN (localhost) for ClickHouse ODBC Driver (Unicode)"/>
             <RegistryValue Name="Driver" Type="string" Value="ClickHouse ODBC Driver (Unicode)"/>
-            <RegistryValue Name="Url" Type="string" Value="https://default:password@localhost:8443/query?database=default"/>
+            <RegistryValue Name="Url" Type="string" Value="http://example:3218"/>
         </RegistryKey>
         <RegistryKey ForceCreateOnInstall="yes" Id="UnicodeOdbcDsnRegInstalled" Key="SOFTWARE\ODBC\ODBC.INI\ODBC Data Sources" Root="HKLM">
             <RegistryValue Name="ClickHouse DSN (Unicode)" Type="string" Value="ClickHouse ODBC Driver (Unicode)"/>

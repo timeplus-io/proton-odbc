@@ -858,37 +858,37 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLTables)(
 
         // Get a list of all databases.
         if (catalog == SQL_ALL_CATALOGS && schema.empty() && table.empty()) {
-            query << " CAST(name, 'Nullable(String)') AS TABLE_CAT,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_SCHEM,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_NAME,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_TYPE,";
-            query << " CAST(NULL, 'Nullable(String)') AS REMARKS";
+            query << " cast(name, 'nullable(string)') AS TABLE_CAT,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_SCHEM,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_NAME,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_TYPE,";
+            query << " cast(NULL, 'nullable(string)') AS REMARKS";
             query << " FROM system.databases";
         }
         // Get a list of all schemas (currently, just an empty list).
         else if (catalog.empty() && schema == SQL_ALL_SCHEMAS && table.empty()) {
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_CAT,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_SCHEM,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_NAME,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_TYPE,";
-            query << " CAST(NULL, 'Nullable(String)') AS REMARKS";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_CAT,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_SCHEM,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_NAME,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_TYPE,";
+            query << " cast(NULL, 'nullable(string)') AS REMARKS";
             query << " WHERE (1 == 0)";
         }
         // Get a list of all valid table types (currently, 'TABLE' only.)
         else if (catalog.empty() && schema.empty() && table.empty() && table_type_list == SQL_ALL_TABLE_TYPES) {
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_CAT,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_SCHEM,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_NAME,";
-            query << " CAST('TABLE', 'Nullable(String)') AS TABLE_TYPE,";
-            query << " CAST(NULL, 'Nullable(String)') AS REMARKS";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_CAT,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_SCHEM,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_NAME,";
+            query << " cast('TABLE', 'nullable(string)') AS TABLE_TYPE,";
+            query << " cast(NULL, 'nullable(string)') AS REMARKS";
         }
         // Get a list of tables matching all criteria.
         else {
-            query << " CAST(database, 'Nullable(String)') AS TABLE_CAT,";
-            query << " CAST(NULL, 'Nullable(String)') AS TABLE_SCHEM,";
-            query << " CAST(name, 'Nullable(String)') AS TABLE_NAME,";
-            query << " CAST('TABLE', 'Nullable(String)') AS TABLE_TYPE,";
-            query << " CAST(NULL, 'Nullable(String)') AS REMARKS";
+            query << " cast(database, 'nullable(string)') AS TABLE_CAT,";
+            query << " cast(NULL, 'nullable(string)') AS TABLE_SCHEM,";
+            query << " cast(name, 'nullable(string)') AS TABLE_NAME,";
+            query << " cast('TABLE', 'nullable(string)') AS TABLE_TYPE,";
+            query << " cast(NULL, 'nullable(string)') AS REMARKS";
             query << " FROM system.tables";
             query << " WHERE (1 == 1)";
 
@@ -905,28 +905,28 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLTables)(
             // Note, that 'catalog' variable will be set to "%" above (or to the connected database name), even if CatalogName == nullptr.
             if (is_pattern && !is_odbc_v2) {
                 if (!isMatchAnythingCatalogFnPatternArg(catalog))
-                    query << " AND isNotNull(TABLE_CAT) AND coalesce(TABLE_CAT, '') LIKE '" << escapeForSQL(catalog) << "'";
+                    query << " AND is_not_null(TABLE_CAT) AND coalesce(TABLE_CAT, '') LIKE '" << escapeForSQL(catalog) << "'";
             }
             else if (CatalogName) {
-                query << " AND isNotNull(TABLE_CAT) AND coalesce(TABLE_CAT, '') == '" << escapeForSQL(catalog) << "'";
+                query << " AND is_not_null(TABLE_CAT) AND coalesce(TABLE_CAT, '') == '" << escapeForSQL(catalog) << "'";
             }
 
             // Note, that 'schema' variable will be set to "%" above, even if SchemaName == nullptr.
             if (is_pattern) {
                 if (!isMatchAnythingCatalogFnPatternArg(schema))
-                    query << " AND isNotNull(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') LIKE '" << escapeForSQL(schema) << "'";
+                    query << " AND is_not_null(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') LIKE '" << escapeForSQL(schema) << "'";
             }
             else if (SchemaName) {
-                query << " AND isNotNull(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') == '" << escapeForSQL(schema) << "'";
+                query << " AND is_not_null(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') == '" << escapeForSQL(schema) << "'";
             }
 
             // Note, that 'table' variable will be set to "%" above, even if TableName == nullptr.
             if (is_pattern) {
                 if (!isMatchAnythingCatalogFnPatternArg(table))
-                    query << " AND isNotNull(TABLE_NAME) AND coalesce(TABLE_NAME, '') LIKE '" << escapeForSQL(table) << "'";
+                    query << " AND is_not_null(TABLE_NAME) AND coalesce(TABLE_NAME, '') LIKE '" << escapeForSQL(table) << "'";
             }
             else if (TableName) {
-                query << " AND isNotNull(TABLE_NAME) AND coalesce(TABLE_NAME, '') == '" << escapeForSQL(table) << "'";
+                query << " AND is_not_null(TABLE_NAME) AND coalesce(TABLE_NAME, '') == '" << escapeForSQL(table) << "'";
             }
 
             // Table type list is not affected by the value of SQL_ATTR_METADATA_ID, so we always treat it as a list of patterns.
@@ -936,7 +936,7 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLTables)(
                     has_match_anything = has_match_anything || isMatchAnythingCatalogFnPatternArg(table_type);
                 }
                 if (!has_match_anything) {
-                    query << " AND isNotNull(TABLE_TYPE) AND (1 == 0";
+                    query << " AND is_not_null(TABLE_TYPE) AND (1 == 0";
                     for (const auto & table_type : table_types) {
                         query << " OR coalesce(TABLE_TYPE, '') LIKE '" << escapeForSQL(table_type) << "'";
                     }
@@ -989,12 +989,12 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLColumns)(
 
                     if (convertUnparametrizedTypeNameToTypeId(tmp_column_info.type_without_parameters) == DataSourceTypeId::Unknown) {
                         // Interpret all unknown types as String.
-                        tmp_column_info.type_without_parameters = "String";
+                        tmp_column_info.type_without_parameters = "string";
                     }
                 }
                 else {
                     // Interpret all unparsable types as String.
-                    tmp_column_info.type_without_parameters = "String";
+                    tmp_column_info.type_without_parameters = "string";
                 }
 
                 tmp_column_info.updateTypeInfo();
@@ -1060,19 +1060,19 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLColumns)(
         // Note, that 'catalog' variable will be set to "%" above (or to the connected database name), even if CatalogName == nullptr.
         if (is_pattern) {
             if (!isMatchAnythingCatalogFnPatternArg(catalog))
-                query << " AND isNotNull(TABLE_CAT) AND coalesce(TABLE_CAT, '') LIKE '" << escapeForSQL(catalog) << "'";
+                query << " AND is_not_null(TABLE_CAT) AND coalesce(TABLE_CAT, '') LIKE '" << escapeForSQL(catalog) << "'";
         }
         else if (CatalogName) {
-            query << " AND isNotNull(TABLE_CAT) AND coalesce(TABLE_CAT, '') == '" << escapeForSQL(catalog) << "'";
+            query << " AND is_not_null(TABLE_CAT) AND coalesce(TABLE_CAT, '') == '" << escapeForSQL(catalog) << "'";
         }
 
         // Note, that 'schema' variable will be set to "%" above, even if SchemaName == nullptr.
         if (is_pattern) {
             if (!isMatchAnythingCatalogFnPatternArg(schema))
-                query << " AND isNotNull(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') LIKE '" << escapeForSQL(schema) << "'";
+                query << " AND is_not_null(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') LIKE '" << escapeForSQL(schema) << "'";
         }
         else if (SchemaName) {
-            query << " AND isNotNull(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') == '" << escapeForSQL(schema) << "'";
+            query << " AND is_not_null(TABLE_SCHEM) AND coalesce(TABLE_SCHEM, '') == '" << escapeForSQL(schema) << "'";
         }
 
         // Note, that 'table' variable will be set to "%" above, even if TableName == nullptr.
@@ -1126,40 +1126,40 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLGetTypeInfo)(
                      " '"
                   << info.sql_type_name
                   << "' AS TYPE_NAME"
-                     ", toInt16("
+                     ", to_int16("
                   << info.sql_type
                   << ") AS DATA_TYPE"
-                     ", toInt32("
+                     ", to_int32("
                   << info.column_size
                   << ") AS COLUMN_SIZE"
                      ", '' AS LITERAL_PREFIX"
                      ", '' AS LITERAL_SUFFIX"
                      ", '' AS CREATE_PARAMS" /// TODO
-                     ", toInt16("
+                     ", to_int16("
                   << SQL_NO_NULLS
                   << ") AS NULLABLE"
-                     ", toInt16("
+                     ", to_int16("
                   << SQL_TRUE
                   << ") AS CASE_SENSITIVE"
-                     ", toInt16("
+                     ", to_int16("
                   << SQL_SEARCHABLE
                   << ") AS SEARCHABLE"
-                     ", toInt16("
+                     ", to_int16("
                   << info.is_unsigned
                   << ") AS UNSIGNED_ATTRIBUTE"
-                     ", toInt16("
+                     ", to_int16("
                   << SQL_FALSE
                   << ") AS FIXED_PREC_SCALE"
-                     ", toInt16("
+                     ", to_int16("
                   << SQL_FALSE
                   << ") AS AUTO_UNIQUE_VALUE"
                      ", TYPE_NAME AS LOCAL_TYPE_NAME"
-                     ", toInt16(0) AS MINIMUM_SCALE"
-                     ", toInt16(0) AS MAXIMUM_SCALE"
+                     ", to_int16(0) AS MINIMUM_SCALE"
+                     ", to_int16(0) AS MAXIMUM_SCALE"
                      ", DATA_TYPE AS SQL_DATA_TYPE"
-                     ", toInt16(0) AS SQL_DATETIME_SUB"
-                     ", toInt32(10) AS NUM_PREC_RADIX" /// TODO
-                     ", toInt16(0) AS INTERVAL_PRECISION";
+                     ", to_int16(0) AS SQL_DATETIME_SUB"
+                     ", to_int32(10) AS NUM_PREC_RADIX" /// TODO
+                     ", to_int16(0) AS INTERVAL_PRECISION";
         };
 
         for (const auto & name_info : types_g) {
@@ -1172,15 +1172,15 @@ SQLRETURN SQL_API EXPORTED_FUNCTION_MAYBE_W(SQLGetTypeInfo)(
         //      are SQL_TYPE_DATE, SQL_TYPE_TIME, and SQL_TYPE_TIMESTAMP, respectively;
         //      in ODBC 2.x, the data types are SQL_DATE, SQL_TIME, and SQL_TIMESTAMP.
         {
-            auto info = statement.getTypeInfo("Date", "Date");
+            auto info = statement.getTypeInfo("date", "date");
             info.sql_type = SQL_DATE;
-            add_query_for_type("Date", info);
+            add_query_for_type("date", info);
         }
 
         {
-            auto info = statement.getTypeInfo("DateTime", "DateTime");
+            auto info = statement.getTypeInfo("datetime", "datetime");
             info.sql_type = SQL_TIMESTAMP;
-            add_query_for_type("DateTime", info);
+            add_query_for_type("datetime", info);
         }
 
         query << ") ORDER BY DATA_TYPE";

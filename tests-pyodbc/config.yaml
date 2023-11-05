@@ -1,0 +1,6 @@
+data_source:
+  driver: 'ClickHouse ODBC Driver (Unicode)'
+  url: 'http://localhost:3218'
+  database: 'default'
+  uid: 'default'
+  pwd: ''

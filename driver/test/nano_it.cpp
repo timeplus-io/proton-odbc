@@ -121,54 +121,54 @@ void run_test(nanodbc::string const & connection_string) {
             show(results);
         }
 
-        execute(connection, NANODBC_TEXT("drop table if exists simple_test;"));
-        execute(connection, NANODBC_TEXT("create table simple_test (a int) engine Log;"));
-        execute(connection, NANODBC_TEXT("insert into simple_test values (1);"));
-        execute(connection, NANODBC_TEXT("insert into simple_test values (2);"));
+        execute(connection, NANODBC_TEXT("drop stream if exists simple_test;"));
+        execute(connection, NANODBC_TEXT("create stream simple_test (a int);"));
+        execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (1);"));
+        execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (2);"));
         {
-            auto results = execute(connection, NANODBC_TEXT("select * from simple_test;"));
+            auto results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test where _tp_time > earliest_ts() limit 2;"));
             show(results);
         }
-        execute(connection, NANODBC_TEXT("CREATE DATABASE IF NOT EXISTS test;"));
-        execute(connection, NANODBC_TEXT("DROP TABLE IF EXISTS test.strings;"));
-        execute(connection, NANODBC_TEXT("CREATE TABLE test.strings (id UInt64, str String, dt DateTime DEFAULT now()) engine = Log;"));
-        execute(connection, NANODBC_TEXT("INSERT INTO test.strings SELECT number, hex(number+100000), 1 FROM system.numbers LIMIT 100;"));
+        execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS default.strings;"));
+        execute(connection, NANODBC_TEXT("CREATE STREAM default.strings (id uint64, str string, dt datetime DEFAULT now());"));
+        execute(connection, NANODBC_TEXT("INSERT INTO default.strings (* except _tp_time) SELECT number, hex(number+100000), 1 FROM system.numbers LIMIT 100;"));
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT COUNT(*) FROM test.strings;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT count(*) FROM default.strings where _tp_time > earliest_ts() limit 1;"));
             show(results);
         }
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT * FROM test.strings LIMIT 100;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT (* except _tp_time) FROM default.strings where _tp_time > earliest_ts() LIMIT 100;"));
             show(results);
         }
 
         {
             auto results = execute(connection,
-                NANODBC_TEXT("SELECT `test`.`strings`.`str` AS `platform`, SUM(`test`.`strings`.`id`) AS `sum_installs_ok` FROM "
-                             "`test`.`strings` GROUP BY `str`"));
+                NANODBC_TEXT("SELECT `default`.`strings`.`str` AS `platform`, sum(`default`.`strings`.`id`) AS `sum_installs_ok` FROM "
+                             "`default`.`strings` WHERE _tp_time > earliest_ts() GROUP BY `str` LIMIT 100;"));
             show(results);
         }
 
-        execute(connection, NANODBC_TEXT("DROP TABLE IF EXISTS test.strings;"));
+        execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS default.strings;"));
     }
 
     // Setup
-    execute(connection, NANODBC_TEXT("drop table if exists simple_test;"));
-    execute(connection, NANODBC_TEXT("create table simple_test (a int, b varchar) engine Log;"));
+    execute(connection, NANODBC_TEXT("drop stream if exists simple_test;"));
+    execute(connection, NANODBC_TEXT("create stream simple_test (a int, b varchar);"));
 
     // Direct execution
     {
-        execute(connection, NANODBC_TEXT("insert into simple_test values (1, 'one');"));
-        execute(connection, NANODBC_TEXT("insert into simple_test values (2, 'two');"));
-        execute(connection, NANODBC_TEXT("insert into simple_test values (3, 'tri');"));
+        execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (1, 'one');"));
+        execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (2, 'two');"));
+        execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (3, 'tri');"));
         execute(connection, NANODBC_TEXT("insert into simple_test (b) values ('z');"));
-        nanodbc::result results = execute(connection, NANODBC_TEXT("select * from simple_test;"));
+        nanodbc::result results
+            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test where _tp_time > earliest_ts() limit 4;"));
         show(results);
     }
 
     // Accessing results by name, or column number
     {
-        nanodbc::result results = execute(connection, NANODBC_TEXT("select a as first, b as second from simple_test where a = 1;"));
+        nanodbc::result results = execute(connection, NANODBC_TEXT("select a as first, b as second from simple_test where a = 1 and _tp_time > earliest_ts() limit 1;"));
         results.next();
         auto const value = results.get<nanodbc::string>(1);
         cout << endl << results.get<int>(NANODBC_TEXT("first")) << ", " << convert(value) << endl;
@@ -276,7 +276,7 @@ void run_test(nanodbc::string const & connection_string) {
     {
         nanodbc::statement statement(connection);
         execute(connection, NANODBC_TEXT("drop table if exists batch_test;"));
-        execute(connection, NANODBC_TEXT("create table batch_test (x varchar, y int, z float) engine Log;"));
+        execute(connection, NANODBC_TEXT("create table batch_test (x varchar, y int, z float);"));
         prepare(statement, NANODBC_TEXT("insert into batch_test (x, x2, y, z) values (?, ?, ?, ?);"));
 
         const size_t elements = 4;
@@ -304,21 +304,22 @@ void run_test(nanodbc::string const & connection_string) {
 
     // Dates and Times
     {
-        execute(connection, NANODBC_TEXT("drop table if exists date_test;"));
-        execute(connection, NANODBC_TEXT("create table date_test (x datetime) engine Log;"));
+        execute(connection, NANODBC_TEXT("drop stream if exists date_test;"));
+        execute(connection, NANODBC_TEXT("create stream date_test (x datetime);"));
         //execute(connection, NANODBC_TEXT("insert into date_test values (current_timestamp);"));
-        execute(connection, NANODBC_TEXT("insert into date_test values ({fn current_timestamp});"));
+        execute(connection, NANODBC_TEXT("insert into date_test (* except _tp_time) values ({fn current_timestamp});"));
 
-        nanodbc::result results = execute(connection, NANODBC_TEXT("select * from date_test;"));
+        nanodbc::result results
+            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test where _tp_time > earliest_ts() limit 1;"));
         results.next();
 
         nanodbc::date date = results.get<nanodbc::date>(0);
         cout << endl << date.year << "-" << date.month << "-" << date.day << endl;
 
-        results = execute(connection, NANODBC_TEXT("select * from date_test;"));
+        results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test where _tp_time > earliest_ts() limit 1;"));
         show(results);
 
-        execute(connection, NANODBC_TEXT("drop table if exists date_test;"));
+        execute(connection, NANODBC_TEXT("drop stream if exists date_test;"));
     }
 
     // Inserting NULL values with a sentry
@@ -364,7 +365,7 @@ void run_test(nanodbc::string const & connection_string) {
     }
 
     // Cleanup
-    execute(connection, NANODBC_TEXT("drop table if exists simple_test;"));
+    execute(connection, NANODBC_TEXT("drop stream if exists simple_test;"));
 }
 
 void show(nanodbc::result & results) {

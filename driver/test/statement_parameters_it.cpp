@@ -285,7 +285,7 @@ protected:
 using DISABLED_ParameterColumnRoundTripGUIDSymmetric = ParameterColumnRoundTripSymmetric<SQLGUID>;
 
 TEST_P(DISABLED_ParameterColumnRoundTripGUIDSymmetric, Execute) {
-    execute<DataType>(GetParam(), GetParam(), type_info_for("UUID"), false/* case_sensitive */);
+    execute<DataType>(GetParam(), GetParam(), type_info_for("uuid"), false/* case_sensitive */);
 }
 
 INSTANTIATE_TEST_SUITE_P(TypeConversion, DISABLED_ParameterColumnRoundTripGUIDSymmetric,
@@ -301,7 +301,7 @@ INSTANTIATE_TEST_SUITE_P(TypeConversion, DISABLED_ParameterColumnRoundTripGUIDSy
 using ParameterColumnRoundTripNumericSymmetric = ParameterColumnRoundTripSymmetric<SQL_NUMERIC_STRUCT>;
 
 TEST_P(ParameterColumnRoundTripNumericSymmetric, Execute) {
-    execute<DataType>(GetParam(), GetParam(), type_info_for("Decimal"));
+    execute<DataType>(GetParam(), GetParam(), type_info_for("decimal"));
 }
 
 INSTANTIATE_TEST_SUITE_P(TypeConversion, ParameterColumnRoundTripNumericSymmetric,
@@ -328,7 +328,7 @@ INSTANTIATE_TEST_SUITE_P(TypeConversion, ParameterColumnRoundTripNumericSymmetri
 using ParameterColumnRoundTripNumericAsymmetric = ParameterColumnRoundTripAsymmetric<SQL_NUMERIC_STRUCT>;
 
 TEST_P(ParameterColumnRoundTripNumericAsymmetric, Execute) {
-    execute<DataType>(std::get<0>(GetParam()), std::get<1>(GetParam()), type_info_for("Decimal"));
+    execute<DataType>(std::get<0>(GetParam()), std::get<1>(GetParam()), type_info_for("decimal"));
 }
 
 INSTANTIATE_TEST_SUITE_P(TypeConversion, ParameterColumnRoundTripNumericAsymmetric,
@@ -361,8 +361,8 @@ INSTANTIATE_TEST_SUITE_P(TypeConversion, ParameterColumnRoundTripDecimalAsString
         "-12345",
         "12345.6789",
         "-12345.6789",
-        "12345.000000000000",
-        "12345.001002003000",
+        "12345",
+        "12345.001002003",
         "100000000000000000",
         "-100000000000000000",
         "1.00000000000000001",
