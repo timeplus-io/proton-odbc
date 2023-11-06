@@ -170,6 +170,8 @@ INSTANTIATE_TEST_SUITE_P(
     MiscellaneousTest,
     DateTime,
     ::testing::Values(
+        // in Windows, environment variable should be in format of 'tzn [+|-]hh[:mm[:ss] ][dzn]'
+        // reference: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/tzset
         DateTimeParams{"Date", "ODBCDriver2", "UTC-3",
             "to_date('2020-03-25')", SQL_TYPE_DATE,
             "2020-03-25", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 0, 0, 0, 0}
