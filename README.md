@@ -322,7 +322,7 @@ Comprehensive explanations (possibly, with some irrelevant vendor-specific detai
 - [ODBC Troubleshooting: How to Enable Driver-manager Tracing](https://www.simba.com/blog/odbc-troubleshooting-tracing/)
 - [Tracing Application Behavior](http://www.iodbc.org/dataspace/doc/iodbc/wiki/iodbcWiki/FAQ#Tracing%20Application%20Behavior)
 
-### Building from sources: Windows
+### Building from sources: Windows (Recommend)
 
 #### Build-time dependencies <!-- omit in toc -->
 
@@ -330,55 +330,29 @@ CMake bundled with the recent versions of Visual Studio can be used.
 
 An SDK required for building the ODBC driver is included in Windows SDK, which in its turn is also bundled with Visual Studio.
 
-You will need to install WiX toolset to be able to generate `.msi` packages. You can download and install it from [WiX toolset home page](https://wixtoolset.org/).
+You will need to install WiXv3 toolset to be able to generate `.msi` packages. You can download and install it from [WiX toolset home page](https://wixtoolset.org/).
 
 #### Build steps <!-- omit in toc -->
 
-All of the following commands have to be issued in Visual Studio Command Prompt:
-
-- use `x86 Native Tools Command Prompt for VS 2019` or equivalent for 32-bit builds
-- use `x64 Native Tools Command Prompt for VS 2019` or equivalent for 64-bit builds
-
 Clone the repo with submodules:
 
-```sh
-git clone --recursive git@github.com:ClickHouse/clickhouse-odbc.git
+```shell
+# clone the repository
+git clone --recursive https://github.com/timeplus-io/proton-odbc.git
+cd proton-odbc
 ```
 
-Enter the cloned source tree, create a temporary build folder, and generate the solution and project files in it:
+Open it with Visual Studio. Select Configuration to "vs2022-x64-RelWithDebInfo".
 
-```sh
-cd clickhouse-odbc
-mkdir build
-cd build
+Then, from the main menu, select Build > Build All. Make sure that a CMake target is already selected in the Startup Item dropdown in the toolbar.
 
-# Configuration options for the project can be specified in the next command in a form of '-Dopt=val'
+After that, from the main menu, select View > Terminal. In the terminal, run command:
 
-# Use the following command for 32-bit build only.
-cmake -A Win32 -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
-
-# Use the following command for 64-bit build only.
-cmake -A x64 -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+```bash
+cmake --build build-win-vs2022-x64-RelWithDebInfo --target package --config RelWithDebInfo
 ```
 
-Build the generated solution in-place:
-
-```sh
-cmake --build . --config RelWithDebInfo
-cmake --build . --config RelWithDebInfo --target package
-```
-
-...and, optionally, run tests (note, that for non-unit tests, preconfigured driver and DSN entries must exist, that point to the binaries generated in this build folder):
-
-```sh
-cmake --build . --config RelWithDebInfo --target test
-```
-
-...or open the IDE and build `all`, `package`, and `test` targets manually from there:
-
-```sh
-cmake --open .
-```
+You can find `.msi` package in the dir `build-win-vs2022-x64-RelWithDebInfo`. Click it and the odbc will be installed.
 
 ### Building from sources: macOS
 
@@ -426,13 +400,13 @@ brew install git cmake make poco openssl icu4c unixodbc
 Clone the repo recursively with submodules:
 
 ```sh
-git clone --recursive git@github.com:ClickHouse/clickhouse-odbc.git
+git clone --recursive https://github.com/timeplus-io/proton-odbc.git
 ```
 
 Enter the cloned source tree, create a temporary build folder, and generate a Makefile for the project in it:
 
 ```sh
-cd clickhouse-odbc
+cd proton-odbc
 mkdir build
 cd build
 
@@ -498,13 +472,13 @@ scl enable devtoolset-8 -- bash
 Clone the repo with submodules:
 
 ```sh
-git clone --recursive git@github.com:ClickHouse/clickhouse-odbc.git
+git clone --recursive https://github.com/timeplus-io/proton-odbc.git
 ```
 
 Enter the cloned source tree, create a temporary build folder, and generate a Makefile for the project in it:
 
 ```sh
-cd clickhouse-odbc
+cd proton-odbc
 mkdir build
 cd build
 
@@ -526,9 +500,9 @@ cmake3 --build . --config RelWithDebInfo --target package
 cmake3 --build . --config RelWithDebInfo --target test
 ```
 
-### Building from sources: Debian/Ubuntu
+### Building from sources: Debian/Ubuntu (Recommend)
 
-#### Build-time dependencies: UnixODBC <!-- omit in toc -->
+#### Build-time dependencies: UnixODBC (Recommend) <!-- omit in toc -->
 
 Execute the following in the terminal:
 
@@ -556,13 +530,13 @@ If the version of `cmake` is not recent enough, you can install a newer version 
 Clone the repo with submodules:
 
 ```sh
-git clone --recursive git@github.com:ClickHouse/clickhouse-odbc.git
+git clone --recursive https://github.com/timeplus-io/proton-odbc.git
 ```
 
 Enter the cloned source tree, create a temporary build folder, and generate a Makefile for the project in it:
 
 ```sh
-cd clickhouse-odbc
+cd proton-odbc
 mkdir build
 cd build
 
