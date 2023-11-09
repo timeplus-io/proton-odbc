@@ -130,27 +130,27 @@ void run_test(nanodbc::string const & connection_string) {
             auto results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test;"));
             show(results);
         }
-        execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS default.strings;"));
-        execute(connection, NANODBC_TEXT("CREATE STREAM default.strings (id uint64, str string, dt datetime DEFAULT now());"));
-        execute(connection, NANODBC_TEXT("INSERT INTO default.strings (* except _tp_time) SELECT number, hex(number+100000), 1 FROM system.numbers LIMIT 100;"));
+        execute(connection, NANODBC_TEXT("CREATE DATABASE IF NOT EXISTS test;"));
+        execute(connection, NANODBC_TEXT("CREATE STREAM test.strings (id uint64, str string, dt datetime DEFAULT now());"));
+        execute(connection, NANODBC_TEXT("INSERT INTO test.strings (* except _tp_time) SELECT number, hex(number+100000), 1 FROM system.numbers LIMIT 100;"));
         execute(connection, NANODBC_TEXT("select sleep(2)"));
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT count(*) FROM default.strings;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT count(*) FROM test.strings;"));
             show(results);
         }
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT (* except _tp_time) FROM default.strings;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT (* except _tp_time) FROM test.strings;"));
             show(results);
         }
 
         {
             auto results = execute(connection,
-                NANODBC_TEXT("SELECT `default`.`strings`.`str` AS `platform`, sum(`default`.`strings`.`id`) AS `sum_installs_ok` FROM "
-                             "`default`.`strings` GROUP BY `str`;"));
+                NANODBC_TEXT("SELECT `test`.`strings`.`str` AS `platform`, sum(`test`.`strings`.`id`) AS `sum_installs_ok` FROM "
+                             "`test`.`strings` GROUP BY `str`;"));
             show(results);
         }
 
-        execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS default.strings;"));
+        execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS test.strings;"));
     }
 
     // Setup

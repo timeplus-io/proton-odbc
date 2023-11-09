@@ -9,3 +9,8 @@ class TestGrant:
                 with conn.cursor() as cursor:
                     cursor.execute("select 1")
         assert 'Authentication failed' in str(auth_err.value)
+
+    def test_valid(self, get_valid_connection: pyodbc.Connection):
+        with get_valid_connection as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("select 1")

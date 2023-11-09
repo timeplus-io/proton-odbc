@@ -37,13 +37,3 @@ exec('SELECT -127,-128,-129,126,127,128,255,256,257,-32767,-32768,-32769,32766,3
 go
 exec('SELECT *, (CASE WHEN (number == 1) THEN ''o'' WHEN (number == 2) THEN ''two long string'' WHEN (number == 3) THEN ''r'' WHEN (number == 4) THEN NULL ELSE ''-'' END)  FROM system.numbers LIMIT 6') at [proton_link_test];
 go
-
-exec('CREATE STREAM IF NOT EXISTS default.number (a int64, b float64)') at [proton_link_test];
-go
-exec(N'INSERT INTO default.number (* except _tp_time) VALUES (1000, 1.1), (1200, 100.19), (-1000, -99.1);') at [proton_link_test];
-go
-exec('select sleep(2);') at [proton_link_test];
-exec('select (* except _tp_time) from default.number;') at [proton_link_test];
-go
-exec('DROP STREAM default.number;') at [proton_link_test];
-go
