@@ -152,5 +152,6 @@ endforeach ()
 
 if(SQLCMD)
     # MS SQL server need change server in file:
-    add_test(NAME "sqlcmd" COMMAND ${SQLCMD} -i ${CMAKE_CURRENT_SOURCE_DIR}/mssql.linked.server.sql)
+    string(REPLACE "/" "\\" CMAKE_CURRENT_SOURCE_DIR_FOR_WINDOWS ${CMAKE_CURRENT_SOURCE_DIR})
+    add_test(NAME "sqlcmd" COMMAND ${SQLCMD} -i ${CMAKE_CURRENT_SOURCE_DIR_FOR_WINDOWS}\\mssql.linked.server.sql)
 endif()

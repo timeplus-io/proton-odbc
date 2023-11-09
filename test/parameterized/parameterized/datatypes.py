@@ -1,6 +1,7 @@
 import datetime
 import decimal
 import uuid
+import time
 
 from testflows.core import TestFeature, TestScenario
 from testflows.core import Requirements, Feature, Scenario, Given, When, Then, TE
@@ -22,7 +23,7 @@ def check_datatype(connection, datatype, values, nullable=False, quote=False, re
         expected = dict()
 
     if nullable:
-        datatype = f"Nullable({datatype})"
+        datatype = f"nullable({datatype})"
         values.append(NULL)
 
         if expected:
@@ -36,20 +37,21 @@ def check_datatype(connection, datatype, values, nullable=False, quote=False, re
             """, format_description=False):
 
             with Given(f"table with a column of data type {datatype}"):
-                connection.query("DROP TABLE IF EXISTS ps", fetch=False)
-                connection.query(f"CREATE TABLE ps (v {datatype}) ENGINE = Memory", fetch=False)
+                connection.query("DROP STREAM IF EXISTS ps", fetch=False)
+                connection.query(f"CREATE STREAM ps (v {datatype})", fetch=False)
                 try:
                     connection.connection.setencoding(encoding=encoding)
                     for v in values:
                         with When(f"I insert value {repr(v)}", flags=TE, format_name=False):
                             # connection.query("INSERT INTO ps VALUES (?)", [v], fetch=False)
                             if quote:
-                                connection.query(f"INSERT INTO ps VALUES ('{repr(v)}')", fetch=False)
+                                connection.query(f"INSERT INTO ps (* except _tp_time) VALUES ('{repr(v)}')", fetch=False)
                             else:
-                                connection.query(f"INSERT INTO ps VALUES ({repr(v)})", fetch=False)
+                                connection.query(f"INSERT INTO ps (* except _tp_time) VALUES ({repr(v)})", fetch=False)
+                            time.sleep(2)
 
                     with When("I select all values", flags=TE):
-                        rows = connection.query("SELECT * FROM ps ORDER BY v")
+                        rows = connection.query(f"SELECT (* except _tp_time) FROM ps ORDER BY v")
                         if expected.get("all") is not None:
                             with Then(f"the result is {expected.get('all')}", flags=TE, format_name=False):
                                 assert repr(rows) == expected.get("all"), error("result did not match")
@@ -60,13 +62,13 @@ def check_datatype(connection, datatype, values, nullable=False, quote=False, re
                                 # comparing to NULL is not valid in SQL
                                 continue
                             with When(f"I select value {repr(v)}", flags=TE, format_name=False):
-                                rows = connection.query("SELECT * FROM ps WHERE v = ? ORDER BY v", [v])
+                                rows = connection.query("SELECT (* except _tp_time) FROM ps WHERE v = ? ORDER BY v", [v])
                                 if expected.get(v) is not None:
                                     with Then(f"the result is {repr(expected.get(v))}", flags=TE, format_name=False):
                                         assert repr(rows) == expected.get(v), error("result did not match")
                 finally:
                     connection.connection.setencoding(encoding=connection.encoding)
-                    connection.query("DROP TABLE ps", fetch=False)
+                    connection.query("DROP STREAM ps", fetch=False)
 
 @TestScenario
 def sanity_check(self, connection):
@@ -84,7 +86,7 @@ def sanity_check(self, connection):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Int8("1.0"))
 def Int8(self, connection, nullable=False):
     """Verify support for Int8 data type."""
-    check_datatype(connection, "Int8", [-128, 0, 127], expected={
+    check_datatype(connection, "int8", [-128, 0, 127], expected={
             "all": "[(-128, ), (0, ), (127, )]",
             -128: "[(-128, )]",
             0: "[(0, )]",
@@ -95,7 +97,7 @@ def Int8(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Int16("1.0"))
 def Int16(self, connection, nullable=False):
     """Verify support for Int16 data type."""
-    check_datatype(connection, "Int16", [-32768, 0, 32767], expected={
+    check_datatype(connection, "int16", [-32768, 0, 32767], expected={
             "all": "[(-32768, ), (0, ), (32767, )]",
             -32768: "[(-32768, )]",
             0: "[(0, )]",
@@ -106,7 +108,7 @@ def Int16(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Int32("1.0"))
 def Int32(self, connection, nullable=False):
     """Verify support for Int32 data type."""
-    check_datatype(connection, "Int32", [-2147483648, 0, 2147483647], expected={
+    check_datatype(connection, "int32", [-2147483648, 0, 2147483647], expected={
             "all": "[(-2147483648, ), (0, ), (2147483647, )]",
             -2147483648: "[(-2147483648, )]",
             0: "[(0, )]",
@@ -117,7 +119,7 @@ def Int32(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Int64("1.0"))
 def Int64(self, connection, nullable=False):
     """Verify support for Int64 data type."""
-    check_datatype(connection, "Int64", [-9223372036854775808, 0, 9223372036854775807], expected={
+    check_datatype(connection, "int64", [-9223372036854775808, 0, 9223372036854775807], expected={
             "all": "[(-9223372036854775808, ), (0, ), (9223372036854775807, )]",
             -9223372036854775808: "[(-9223372036854775808, )]",
             0: "[(0, )]",
@@ -128,7 +130,7 @@ def Int64(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_UInt8("1.0"))
 def UInt8(self, connection, nullable=False):
     """Verify support for UInt8 data type."""
-    check_datatype(connection, "UInt8", [0, 255], expected={
+    check_datatype(connection, "uint8", [0, 255], expected={
             "all": "[(0, ), (255, )]",
             0: "[(0, )]",
             255: "[(255, )]"
@@ -138,7 +140,7 @@ def UInt8(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_UInt16("1.0"))
 def UInt16(self, connection, nullable=False):
     """Verify support for UInt16 data type."""
-    check_datatype(connection, "UInt16", [0, 65535], expected={
+    check_datatype(connection, "uint16", [0, 65535], expected={
             "all": "[(0, ), (65535, )]",
             0: "[(0, )]",
             65535: "[(65535, )]"
@@ -148,7 +150,7 @@ def UInt16(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_UInt32("1.0"))
 def UInt32(self, connection, nullable=False):
     """Verify support for UInt32 data type."""
-    check_datatype(connection, "UInt32", [0, 4294967295], expected={
+    check_datatype(connection, "uint32", [0, 4294967295], expected={
             "all": "[(0, ), (4294967295, )]",
             0: "[(0, )]",
             4294967295: "[(4294967295, )]"
@@ -158,7 +160,7 @@ def UInt32(self, connection, nullable=False):
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_UInt64("1.0"))
 def UInt64(self, connection, nullable=False):
     """Verify support for UInt64 data type."""
-    check_datatype(connection, "UInt64", [0, 18446744073709551615], expected={
+    check_datatype(connection, "uint64", [0, 18446744073709551615], expected={
             "all": "[(0, ), (18446744073709551615, )]",
             0: "[(0, )]",
             18446744073709551615: "[(18446744073709551615, )]"
@@ -172,7 +174,7 @@ def UInt64(self, connection, nullable=False):
 )
 def Float32(self, connection, nullable=False):
     """Verify support for Float32 data type."""
-    check_datatype(connection, "Float32", [-1, 0, float("inf"), float("-inf"), float("nan"), 13.26], expected={
+    check_datatype(connection, "float32", [-1, 0, float("inf"), float("-inf"), float("nan"), 13.26], expected={
             "all": "[(-inf, ), (-1.0, ), (0.0, ), (13.26, ), (inf, ), (nan, )]",
             0: "[(0.0, )]",
             -1: "[(-1.0, )]",
@@ -190,7 +192,7 @@ def Float32(self, connection, nullable=False):
 )
 def Float64(self, connection, nullable=False):
     """Verify support for Float64 data type."""
-    check_datatype(connection, "Float64", [-1, 0, float("inf"), 13.26, float("-inf"), float("nan")], expected={
+    check_datatype(connection, "float64", [-1, 0, float("inf"), 13.26, float("-inf"), float("nan")], expected={
             "all": "[(-inf, ), (-1.0, ), (0.0, ), (13.26, ), (inf, ), (nan, )]",
             0: "[(0.0, )]",
             -1: "[(-1.0, )]",
@@ -211,7 +213,7 @@ def Decimal32(self, connection, nullable=False):
         decimal.Decimal('99999.9999'): "[(Decimal('99999.9999'), )]"
     }
 
-    check_datatype(connection, "Decimal32(4)", [
+    check_datatype(connection, "decimal32(4)", [
             decimal.Decimal('-99999.9999'),
             decimal.Decimal('10.1234'),
             decimal.Decimal('99999.9999')
@@ -228,7 +230,7 @@ def Decimal64(self, connection, nullable=False):
         decimal.Decimal('99999999999999.9999'): "[(Decimal('99999999999999.9999'), )]"
     }
 
-    check_datatype(connection, "Decimal64(4)", [
+    check_datatype(connection, "decimal64(4)", [
             decimal.Decimal('-99999999999999.9999'),
             decimal.Decimal('10.1234'),
             decimal.Decimal('99999999999999.9999')
@@ -245,7 +247,7 @@ def Decimal128(self, connection, nullable=False):
         decimal.Decimal('9999999999999999999999999999999999.9999'): "[(Decimal('9999999999999999999999999999999999.9999'), )]"
     }
 
-    check_datatype(connection, "Decimal128(4)", [
+    check_datatype(connection, "decimal128(4)", [
             decimal.Decimal('-9999999999999999999999999999999999.9999'),
             decimal.Decimal('10.1234'),
             decimal.Decimal('9999999999999999999999999999999999.9999')
@@ -268,7 +270,7 @@ def String(self, connection, nullable=False):
                 values[0]: f"[('{values[0]}', ), ('{values[1]}', )]",
                 values[1]: f"[('{values[0]}', ), ('{values[1]}', )]"
             }
-            check_datatype(connection, "String", values=values, expected=expected,
+            check_datatype(connection, "string", values=values, expected=expected,
                 encoding="utf-8", quote=True, nullable=nullable)
 
         with Scenario("ascii", flags=TE, description="ASCII encoding."):
@@ -278,7 +280,7 @@ def String(self, connection, nullable=False):
                 values[0]: f"[('{values[0]}', ), ('{values[1]}', )]",
                 values[1]: f"[('{values[0]}', ), ('{values[1]}', )]"
             }
-            check_datatype(connection, "String", values=values, expected=expected,
+            check_datatype(connection, "string", values=values, expected=expected,
                 encoding="ascii", quote=True, nullable=nullable)
 
     with Scenario("utf8",
@@ -311,7 +313,7 @@ def String(self, connection, nullable=False):
             values[0]: f"[('{values[0]}', )]",
             values[1]: f"[('{values[1]}', )]"
         }
-        check_datatype(connection, "String", values=values, expected=expected,
+        check_datatype(connection, "string", values=values, expected=expected,
             encoding="utf-8", quote=True, nullable=nullable)
 
     with Scenario("ascii",
@@ -328,7 +330,7 @@ def String(self, connection, nullable=False):
             values[0]: f"[('{values[0]}', )]",
             values[1]: f"[('{values[1]}', )]"
         }
-        check_datatype(connection, "String", values=values, expected=expected,
+        check_datatype(connection, "string", values=values, expected=expected,
             encoding="ascii", quote=True, nullable=nullable)
 
     with Scenario("binary",
@@ -343,7 +345,7 @@ def String(self, connection, nullable=False):
             "all": f"[('{values[0]}', )]",
             values[0]: f"[('{values[0]}', )]",
         }
-        check_datatype(connection, "String", values=values, expected=expected, encoding="ascii", quote=False, nullable=nullable)
+        check_datatype(connection, "string", values=values, expected=expected, encoding="ascii", quote=False, nullable=nullable)
 
 @TestScenario
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_FixedString("1.0"))
@@ -361,7 +363,7 @@ def FixedString(self, connection, nullable=False):
             values[1]: "[('hello\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00', )]",
             values[2]: f"[('{values[2]}\\x00', )]"
         }
-        check_datatype(connection, "FixedString(16)", values=values, expected=expected,
+        check_datatype(connection, "fixed_string(16)", values=values, expected=expected,
             encoding="utf-8", quote=True, nullable=nullable)
 
     with Scenario("ascii", flags=TE, description="ASCII encoding."):
@@ -376,7 +378,7 @@ def FixedString(self, connection, nullable=False):
             values[1]: "[('hello\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00', )]",
             values[2]: "[('ABCDEFGHIJKLMN\\x00\\x00', )]"
         }
-        check_datatype(connection, "FixedString(16)", values=values, expected=expected,
+        check_datatype(connection, "fixed_string(16)", values=values, expected=expected,
             encoding="ascii", quote=True, nullable=nullable)
 
 @TestScenario
@@ -394,7 +396,7 @@ def Date(self, connection, nullable=False):
         values[1]: "[(datetime.date(2000, 12, 31), )]",
         values[2]: "[(datetime.date(2024, 5, 5), )]"
     }
-    check_datatype(connection, "Date", values=values, expected=expected, quote=True, nullable=nullable)
+    check_datatype(connection, "date", values=values, expected=expected, quote=True, nullable=nullable)
 
 @TestScenario
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_DateTime("1.0"))
@@ -411,7 +413,7 @@ def DateTime(self, connection, nullable=False):
         values[1]: "[(datetime.datetime(2000, 12, 31, 23, 59, 59), )]",
         values[2]: "[(datetime.datetime(2024, 5, 5, 13, 31, 32), )]"
     }
-    check_datatype(connection, "DateTime", values=values, expected=expected, quote=True, nullable=nullable)
+    check_datatype(connection, "datetime", values=values, expected=expected, quote=True, nullable=nullable)
 
 @TestScenario
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Enum("1.0"))
@@ -427,7 +429,7 @@ def Enum(self, connection, nullable=False):
             }, encoding="utf-8", quote=True, nullable=nullable)
 
     with Scenario("ascii", flags=TE, description="ASCII encoding"):
-        check_datatype(connection, "Enum('hello' = 1, 'world' = 2)", ["hello", "world"], expected={
+        check_datatype(connection, "enum('hello' = 1, 'world' = 2)", ["hello", "world"], expected={
                 "all": "[('hello', ), ('world', )]",
                 "hello": "[('hello', )]",
                 "world": "[('world', )]"
@@ -448,7 +450,7 @@ def UUID(self, connection, nullable=False):
         uuid1: f"[('{uuid1}', )]",
         uuid2: f"[('{uuid2}', )]"
     }
-    check_datatype(connection, "UUID", values=values, expected=expected, quote=True, nullable=nullable)
+    check_datatype(connection, "uuid", values=values, expected=expected, quote=True, nullable=nullable)
 
 @TestScenario
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_IPv4("1.0"))
@@ -463,7 +465,7 @@ def IPv4(self, connection, nullable=False):
         ipv40: f"[('{ipv40}', )]",
         ipv41: f"[('{ipv41}', )]"
     }
-    check_datatype(connection, "IPv4", values=values, expected=expected, quote=True, nullable=nullable)
+    check_datatype(connection, "ipv4", values=values, expected=expected, quote=True, nullable=nullable)
 
 @TestScenario
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_IPv6("1.0"))
@@ -478,7 +480,7 @@ def IPv6(self, connection, nullable=False):
         ipv60: f"[('{ipv60}', )]",
         ipv61: f"[('{ipv61}', )]"
     }
-    check_datatype(connection, "IPv6", values=values, expected=expected, quote=True, nullable=nullable)
+    check_datatype(connection, "ipv6", values=values, expected=expected, quote=True, nullable=nullable)
 
 @TestFeature
 @Requirements(RQ_SRS_003_ParameterizedQueries_DataType_Select_Nullable("1.0"))
@@ -496,24 +498,24 @@ def datatypes(self, nullable=False):
         args = {"connection": connection, "nullable": nullable}
 
         Scenario("Sanity check", run=sanity_check, args={"connection": connection})
-        Scenario("Int8", run=Int8, args=args, flags=TE)
-        Scenario("Int16", run=Int16, args=args, flags=TE)
-        Scenario("Int32", run=Int32, args=args, flags=TE)
-        Scenario("Int64", run=Int64, args=args, flags=TE)
-        Scenario("UInt8", run=UInt8, args=args, flags=TE)
-        Scenario("UInt16", run=UInt16, args=args, flags=TE)
-        Scenario("UInt32", run=UInt32, args=args, flags=TE)
-        Scenario("UInt64", run=UInt64, args=args, flags=TE)
-        Scenario("Float32", run=Float32, args=args, flags=TE)
-        Scenario("Float64", run=Float64, args=args, flags=TE)
-        Scenario("Decimal32", run=Decimal32, args=args, flags=TE)
-        Scenario("Decimal64", run=Decimal64, args=args, flags=TE)
-        Scenario("Decimal128", run=Decimal128, args=args, flags=TE)
-        Scenario("String", run=String, args=args, flags=TE)
-        Scenario("FixedString", run=FixedString, args=args, flags=TE)
-        Scenario("Date", run=Date, args=args, flags=TE)
-        Scenario("DateTime", run=DateTime, args=args, flags=TE)
-        Scenario("Enum", run=Enum, args=args, flags=TE)
-        Scenario("UUID", run=UUID, args=args, flags=TE)
-        Scenario("IPv4", run=IPv4, args=args, flags=TE)
-        Scenario("IPv6", run=IPv6, args=args, flags=TE)
+        Scenario("int8", run=Int8, args=args, flags=TE)
+        Scenario("int16", run=Int16, args=args, flags=TE)
+        Scenario("int32", run=Int32, args=args, flags=TE)
+        Scenario("int64", run=Int64, args=args, flags=TE)
+        Scenario("uint8", run=UInt8, args=args, flags=TE)
+        Scenario("uint16", run=UInt16, args=args, flags=TE)
+        Scenario("uint32", run=UInt32, args=args, flags=TE)
+        Scenario("uint64", run=UInt64, args=args, flags=TE)
+        Scenario("float32", run=Float32, args=args, flags=TE)
+        Scenario("float64", run=Float64, args=args, flags=TE)
+        Scenario("decimal32", run=Decimal32, args=args, flags=TE)
+        Scenario("decimal64", run=Decimal64, args=args, flags=TE)
+        Scenario("decimal128", run=Decimal128, args=args, flags=TE)
+        Scenario("string", run=String, args=args, flags=TE)
+        Scenario("fixed_string", run=FixedString, args=args, flags=TE)
+        Scenario("date", run=Date, args=args, flags=TE)
+        Scenario("datetime", run=DateTime, args=args, flags=TE)
+        Scenario("enum", run=Enum, args=args, flags=TE)
+        Scenario("uuid", run=UUID, args=args, flags=TE)
+        Scenario("ipv4", run=IPv4, args=args, flags=TE)
+        Scenario("ipv6", run=IPv6, args=args, flags=TE)

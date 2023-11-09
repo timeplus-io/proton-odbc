@@ -114,7 +114,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(NoOpAPICallOverhead)) {
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchNoExtractMultiType)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('some not very long text', 'String') AS col1, CAST('12345', 'Int') AS col2, CAST('12.345', 'Float32') AS col3, CAST('-123.456789012345678', 'Float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('some not very long text', 'string') AS col1, cast('12345', 'int') AS col2, cast('12.345', 'float32') AS col3, cast('-123.456789012345678', 'float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -154,7 +154,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchNoExtractMultiType
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchGetDataMultiType)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('some not very long text', 'String') AS col1, CAST('12345', 'Int') AS col2, CAST('12.345', 'Float32') AS col3, CAST('-123.456789012345678', 'Float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('some not very long text', 'string') AS col1, cast('12345', 'int') AS col2, cast('12.345', 'float32') AS col3, cast('-123.456789012345678', 'float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -249,7 +249,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchGetDataMultiType))
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColMultiType)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('some not very long text', 'String') AS col1, CAST('12345', 'Int') AS col2, CAST('12.345', 'Float32') AS col3, CAST('-123.456789012345678', 'Float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('some not very long text', 'string') AS col1, cast('12345', 'int') AS col2, cast('12.345', 'float32') AS col3, cast('-123.456789012345678', 'float64') AS col4 FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -344,7 +344,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColMultiType))
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_ANSI_String)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('some not very long text', 'String') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('some not very long text', 'string') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -397,7 +397,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_Unicode_String)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('some not very long text', 'String') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('some not very long text', 'string') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -450,7 +450,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_Int)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('12345', 'Int') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('12345', 'int') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -503,7 +503,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_Float64)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('-123.456789012345678', 'Float64') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('-123.456789012345678', 'float64') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 
@@ -556,7 +556,7 @@ TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchBindColSingleType_
 
 TEST_F(PerformanceTest, ENABLE_FOR_OPTIMIZED_BUILDS_ONLY(FetchArrayBindColSingleType_Int)) {
     constexpr std::size_t total_rows_expected = 10'000'000;
-    const std::string query_orig = "SELECT CAST('12345', 'Int') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
+    const std::string query_orig = "SELECT cast('12345', 'int') AS col FROM numbers(" + std::to_string(total_rows_expected) + ")";
 
     std::cout << "Executing query:\n\t" << query_orig << std::endl;
 

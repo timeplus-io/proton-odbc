@@ -169,8 +169,8 @@ void Statement::requestNextPackOfResultSets(std::unique_ptr<ResultMutator> && mu
     }
 
     result_reader = make_result_reader(
-        response->get("X-ClickHouse-Format", connection.default_format),
-        response->get("X-ClickHouse-Timezone", Poco::Timezone::name()),
+        response->get("X-proton-Format", connection.default_format),
+        response->get("X-proton-Timezone", Poco::Timezone::name()),
         *in, std::move(mutator)
     );
 
@@ -292,7 +292,7 @@ std::string Statement::buildFinalQuery(const std::vector<ParamBindingInfo>& para
         std::string param_type;
 
         if (param_bindings.size() <= i) {
-            param_type = "Nullable(Nothing)";
+            param_type = "nullable(nothing)";
         }
         else {
             const auto & binding_info = param_bindings[i];

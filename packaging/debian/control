@@ -9,5 +9,5 @@ Package: clickhouse-odbc
 Section: database
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Clickhouse odbc driver
+Description: Proton ODBC driver
  .

@@ -4,23 +4,23 @@
 #include <sstream>
 
 static TypeAst::Meta getTypeMeta(const std::string & name) {
-    if (name == "Array") {
+    if (name == "array") {
         return TypeAst::Array;
     }
 
-    if (name == "Null") {
+    if (name == "null") {
         return TypeAst::Null;
     }
 
-    if (name == "Nullable") {
+    if (name == "nullable") {
         return TypeAst::Nullable;
     }
 
-    if (name == "Tuple") {
+    if (name == "tuple") {
         return TypeAst::Tuple;
     }
 
-    if (name == "LowCardinality") {
+    if (name == "low_cardinality") {
         return TypeAst::LowCardinality;
     }
 

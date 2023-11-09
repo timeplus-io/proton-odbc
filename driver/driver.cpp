@@ -107,7 +107,7 @@ void Driver::writeLogSessionStart(std::ostream & stream) {
     }
     stream << " ====================" << std::endl;
 
-    stream << "ClickHouse ODBC Driver";
+    stream << "Proton ODBC Driver";
     stream << " VERSION=" << VERSION_STRING;
     stream << " SYSTEM=" << SYSTEM_STRING;
     stream << " " << ODBC_PROVIDER;

@@ -5,10 +5,10 @@ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/M
 include (cmake/prevent_in_source_builds.cmake)
 
 project (
-    clickhouse-odbc
+    proton-odbc
     VERSION 1.2.1.20220905
-    DESCRIPTION "The official ODBC driver implementation for accessing ClickHouse as a data source."
-    HOMEPAGE_URL "https://github.com/ClickHouse/clickhouse-odbc"
+    DESCRIPTION "The official ODBC driver implementation for accessing Proton as a data source."
+    HOMEPAGE_URL "https://github.com/timeplus-io/proton-odbc"
     LANGUAGES C CXX
 )
 
@@ -59,8 +59,8 @@ cmake_dependent_option (CH_ODBC_PREFER_BUNDLED_NANODBC "Prefer bundled over syst
 option (CH_ODBC_RUNTIME_LINK_STATIC "Link with compiler and language runtime statically" OFF)
 option (CH_ODBC_THIRD_PARTY_LINK_STATIC "Link with third party libraries statically" ON)
 
-set (CH_ODBC_DEFAULT_DSN_ANSI "ClickHouse DSN (ANSI)" CACHE STRING "Default ANSI DSN name")
-set (CH_ODBC_DEFAULT_DSN_UNICODE "ClickHouse DSN (Unicode)" CACHE STRING "Default Unicode DSN name")
+set (CH_ODBC_DEFAULT_DSN_ANSI "Proton DSN (ANSI)" CACHE STRING "Default ANSI DSN name")
+set (CH_ODBC_DEFAULT_DSN_UNICODE "Proton DSN (Unicode)" CACHE STRING "Default Unicode DSN name")
 
 if (MSVC)
     # This default encoding mode will be overriden by UNICODE, in the corresponding cases.
@@ -229,13 +229,13 @@ if (CH_ODBC_ENABLE_INSTALL)
 
     cpack_add_component_group (ANSIGroup
         DISPLAY_NAME "ANSI ${ARCH_BITS}-bit Driver"
-        DESCRIPTION "ClickHouse ODBC Driver (ANSI, ${ARCH_BITS}-bit)"
+        DESCRIPTION "Proton ODBC Driver (ANSI, ${ARCH_BITS}-bit)"
         EXPANDED
     )
 
     cpack_add_component (ANSIDriver
         DISPLAY_NAME "Driver"
-        DESCRIPTION "ClickHouse ODBC Driver (ANSI, ${ARCH_BITS}-bit)"
+        DESCRIPTION "Proton ODBC Driver (ANSI, ${ARCH_BITS}-bit)"
         REQUIRED
         GROUP ANSIGroup
     )
@@ -250,13 +250,13 @@ if (CH_ODBC_ENABLE_INSTALL)
 
     cpack_add_component_group (UnicodeGroup
         DISPLAY_NAME "Unicode ${ARCH_BITS}-bit Driver"
-        DESCRIPTION "ClickHouse ODBC Driver (Unicode, ${ARCH_BITS}-bit)"
+        DESCRIPTION "Proton ODBC Driver (Unicode, ${ARCH_BITS}-bit)"
         EXPANDED
     )
 
     cpack_add_component (UnicodeDriver
         DISPLAY_NAME "Driver"
-        DESCRIPTION "ClickHouse ODBC Driver (Unicode, ${ARCH_BITS}-bit)"
+        DESCRIPTION "Proton ODBC Driver (Unicode, ${ARCH_BITS}-bit)"
         DEPENDS ANSIDriver
         GROUP UnicodeGroup
     )
@@ -297,7 +297,7 @@ if (CH_ODBC_ENABLE_INSTALL)
 
     set (CPACK_PACKAGE_VENDOR "Yandex LLC")
     set (CPACK_PACKAGE_DESCRIPTION "The official ODBC driver implementation for accessing ClickHouse as a data source.")
-    set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "ClickHouse ODBC Driver (${ARCH_BITS}-bit)")
+    set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Proton ODBC Driver (${ARCH_BITS}-bit)")
     set (CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/packaging/Readme.rtf")
     set (CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/packaging/License.rtf")
     set (CPACK_PACKAGE_CHECKSUM "SHA256")
@@ -321,7 +321,7 @@ if (CH_ODBC_ENABLE_INSTALL)
     set (CPACK_RPM_DEBUGINFO_PACKAGE OFF)
     set (CPACK_RPM_PACKAGE_SOURCES OFF)
 
-    set (CPACK_WIX_ROOT_FEATURE_TITLE "ClickHouse ODBC Driver")
+    set (CPACK_WIX_ROOT_FEATURE_TITLE "Proton ODBC Driver")
     set (CPACK_WIX_ROOT_FEATURE_DESCRIPTION "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}")
     set (CPACK_WIX_PATCH_FILE "${PROJECT_SOURCE_DIR}/packaging/RegConfig.patch.wxs")
     if ("${ARCH_BITS}" STREQUAL "32")

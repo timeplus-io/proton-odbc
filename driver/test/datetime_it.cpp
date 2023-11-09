@@ -170,54 +170,57 @@ INSTANTIATE_TEST_SUITE_P(
     MiscellaneousTest,
     DateTime,
     ::testing::Values(
-        DateTimeParams{"Date", "ODBCDriver2", "Europe/Moscow",
-            "toDate('2020-03-25')", SQL_TYPE_DATE,
+        // in Windows, environment variable should be in format of 'tzn [+|-]hh[:mm[:ss] ][dzn]'
+        // reference: https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/tzset
+        DateTimeParams{"Date", "ODBCDriver2", "UTC-3",
+            "to_date('2020-03-25')", SQL_TYPE_DATE,
             "2020-03-25", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 0, 0, 0, 0}
         },
-        DateTimeParams{"DateTime", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime('2020-03-25 12:11:22')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime", "ODBCDriver2", "UTC-3",
+            "to_datetime('2020-03-25 12:11:22')", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 0}
         },
-        DateTimeParams{"DateTime_TZ", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime('2020-03-25 12:11:22', 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime_TZ", "ODBCDriver2", "UTC-3",
+            "to_datetime('2020-03-25 12:11:22', 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 0}
         },
-        DateTimeParams{"DateTime64_0", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime64('2020-03-25 12:11:22.123456789', 0)", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_0", "ODBCDriver2", "UTC-3",
+            "to_datetime64('2020-03-25 12:11:22.123456789', 0)", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 0}
         },
-        DateTimeParams{"DateTime64_4", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime64('2020-03-25 12:11:22.123456789', 4)", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_4", "ODBCDriver2", "UTC-3",
+            "to_datetime64('2020-03-25 12:11:22.123456789', 4)", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22.1234", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 123400000}
         },
-        DateTimeParams{"DateTime64_9", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime64('2020-03-25 12:11:22.123456789', 9)", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_9", "ODBCDriver2", "UTC-3",
+            "to_datetime64('2020-03-25 12:11:22.123456789', 9)", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22.123456789", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 123456789}
         },
-        DateTimeParams{"DateTime64_9_TZ", "ODBCDriver2", "Europe/Moscow",
-            "toDateTime64('2020-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_9_TZ", "ODBCDriver2", "UTC-3",
+            "to_datetime64('2020-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
             "2020-03-25 12:11:22.123456789", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 12, 11, 22, 123456789}
         },
 
-        // TODO: remove this once the formats behave identically.
-
-        DateTimeParams{"Date", "RowBinaryWithNamesAndTypes", "Europe/Moscow",
-            "toDate('2020-03-25')", SQL_TYPE_DATE,
+        // windows do not support Europe/Moscow, but both windows and linux support UTC-3
+        DateTimeParams{"Date", "RowBinaryWithNamesAndTypes", "UTC-3",
+            "to_date('2020-03-25')", SQL_TYPE_DATE,
             "2020-03-25", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 0, 0, 0, 0}
         },
-        DateTimeParams{"DateTime_TZ", "RowBinaryWithNamesAndTypes", "Europe/Moscow",
-            "toDateTime('2020-03-25 12:11:22', 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime_TZ", "RowBinaryWithNamesAndTypes", "UTC-3",
+            "to_datetime('2020-03-25 12:11:22', 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
             "2020-03-25 09:26:22", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 9, 26, 22, 0}
         },
-        DateTimeParams{"DateTime64_9_TZ", "RowBinaryWithNamesAndTypes", "Europe/Moscow",
-            "toDateTime64('2020-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_9_TZ", "RowBinaryWithNamesAndTypes", "UTC-3",
+            "to_datetime64('2020-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
             "2020-03-25 09:26:22.123456789", SQL_TIMESTAMP_STRUCT{2020, 3, 25, 9, 26, 22, 123456789}
-        }/*,
+        }
+
+        /*,
 
         // TODO: uncomment once the target ClickHouse server is 21.4+
 
-        DateTimeParams{"DateTime64_9_TZ_pre_epoch", "RowBinaryWithNamesAndTypes", "Europe/Moscow",
-            "toDateTime64('1955-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
+        DateTimeParams{"DateTime64_9_TZ_pre_epoch", "RowBinaryWithNamesAndTypes", "UTC-3",
+            "to_dateTime64('1955-03-25 12:11:22.123456789', 9, 'Asia/Kathmandu')", SQL_TYPE_TIMESTAMP,
             "1955-03-25 09:26:22.123456789", SQL_TIMESTAMP_STRUCT{1955, 3, 25, 9, 26, 22, 123456789}
         }
         */

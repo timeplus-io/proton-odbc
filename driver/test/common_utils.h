@@ -49,7 +49,7 @@
 
 inline std::optional<std::string> get_env_var(const std::string & name) {
     if (Poco::Environment::has(name)) {
-        return Poco::Environment::get("TZ");
+        return Poco::Environment::get(name);
     }
 
     return {};

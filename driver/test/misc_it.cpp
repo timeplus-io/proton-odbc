@@ -19,9 +19,11 @@ TEST_F(MiscellaneousTest, RowArraySizeAttribute) {
         rc = ODBC_CALL_ON_STMT_THROW(hstmt, SQLGetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, &size, sizeof(size), 0));
         ASSERT_EQ(size, 1);
     }
-    
+
+    //  Microsoft ODBC will throw "HY090 Invalid string or buffer length" when setting SQL_ATTR_ROW_ARRAY_SIZE to 0.
+
     {
-        size = 0;
+        size = 3;
         rc = ODBC_CALL_ON_STMT_THROW(hstmt, SQLSetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, (SQLPOINTER)size, 0));
         ASSERT_EQ(rc, SQL_SUCCESS);
     }
@@ -29,7 +31,7 @@ TEST_F(MiscellaneousTest, RowArraySizeAttribute) {
     {
         size = 123;
         rc = ODBC_CALL_ON_STMT_THROW(hstmt, SQLGetStmtAttr(hstmt, SQL_ATTR_ROW_ARRAY_SIZE, &size, sizeof(size), 0));
-        ASSERT_EQ(size, 0);
+        ASSERT_EQ(size, 3);
     }
 
     {
@@ -59,7 +61,7 @@ TEST_F(MiscellaneousTest, RowArraySizeAttribute) {
 
 TEST_F(MiscellaneousTest, SQLGetData_ZeroOutputBufferSize) {
     const std::string col_str = "1234567890";
-    const std::string query_orig = "SELECT CAST('" + col_str + "', 'String') AS col";
+    const std::string query_orig = "SELECT cast('" + col_str + "', 'string') AS col";
 
     const auto query = fromUTF8<SQLTCHAR>(query_orig);
     auto * query_wptr = const_cast<SQLTCHAR * >(query.c_str());
@@ -274,7 +276,7 @@ TEST_P(HugeIntTypeReporting, Check) {
     const auto cs = "DSN=" + dsn + ";" + cs_extras;
     connect(cs);
 
-    const auto query_orig = "SELECT CAST('0', '" + type + "') AS col";
+    const auto query_orig = "SELECT cast('0', '" + type + "') AS col";
 
     const auto query = fromUTF8<SQLTCHAR>(query_orig);
     auto * query_wptr = const_cast<SQLTCHAR * >(query.c_str());
@@ -293,7 +295,7 @@ INSTANTIATE_TEST_SUITE_P(
         ::testing::Values(
 
             // TODO: uncomment each type once its support is implemented.
-            "UInt64"/*, "Int128", "UInt128", "Int256", "UInt256"*/
+            "uint64"/*, "Int128", "UInt128", "Int256", "UInt256"*/
 
         ),
         ::testing::Values(

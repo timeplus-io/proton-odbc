@@ -1,6 +1,6 @@
 FROM centos:7
 
-# image to build & test clickhouse odbc on centos7 & docker
+# image to build & test Proton ODBC on centos7 & docker
 # install all needed build & test dependancies
 
 # docker build -f Dockerfile.centos7 . -t clickhouse-odbc-tester-centos7

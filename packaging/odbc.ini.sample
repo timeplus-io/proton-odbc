@@ -1,12 +1,12 @@
 # Insert the content of this file into ~/.odbc.ini or /etc/odbc.ini files.
 
 [ODBC Data Sources]
-ClickHouse DSN (ANSI)    = ClickHouse ODBC Driver (ANSI)
-ClickHouse DSN (Unicode) = ClickHouse ODBC Driver (Unicode)
+Proton DSN (ANSI)    = Proton ODBC Driver (ANSI)
+Proton DSN (Unicode) = Proton ODBC Driver (Unicode)
 
-[ClickHouse DSN (ANSI)]
-Driver      = ClickHouse ODBC Driver (ANSI)
-Description = DSN (localhost) for ClickHouse ODBC Driver (ANSI)
+[Proton DSN (ANSI)]
+Driver      = Proton ODBC Driver (ANSI)
+Description = DSN (localhost) for Proton ODBC Driver (ANSI)
 
 ### New all-in one way to specify connection with [optional] settings:
 # Url = https://default:password@localhost:8443/query?database=default&max_result_bytes=4000000&buffer_size=3000000
@@ -22,7 +22,7 @@ Description = DSN (localhost) for ClickHouse ODBC Driver (ANSI)
 # Port = 8123
 # Proto = http
 
-# Timeout for http queries to ClickHouse server (default is 30 seconds)
+# Timeout for http queries to Proton server (default is 30 seconds)
 # Timeout=60
 
 # SSLMode:
@@ -36,7 +36,7 @@ Description = DSN (localhost) for ClickHouse ODBC Driver (ANSI)
 # DriverLog = yes
 # DriverLogFile = /tmp/chlickhouse-odbc-driver.log
 
-[ClickHouse DSN (Unicode)]
-Driver      = ClickHouse ODBC Driver (Unicode)
-Description = DSN (localhost) for ClickHouse ODBC Driver (Unicode)
+[Proton DSN (Unicode)]
+Driver      = Proton ODBC Driver (Unicode)
+Description = DSN (localhost) for Proton ODBC Driver (Unicode)
 # ...

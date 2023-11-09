@@ -15,7 +15,7 @@ odbc_manager_trace_log_path = os.getenv("ODBC_MANAGER_TRACE_LOG", "/tmp/odbc-dri
 
 @contextmanager
 def Logs():
-    """ClickHouse and ODBC driver logs context manager.
+    """Proton and ODBC driver logs context manager.
     """
     class _Logs:
         def __init__(self, *args):
@@ -50,7 +50,7 @@ def Logs():
 def PyODBCConnection(encoding="utf-8", logs=None):
     """PyODBC connector context manager.
     """
-    dsn = os.getenv("DSN", "ClickHouse DSN (ANSI)")
+    dsn = os.getenv("DSN", "Proton DSN (ANSI)")
     note(f"Using DNS={dsn}")
     connection = pyodbc.connect(f"DSN={dsn};")
     try:

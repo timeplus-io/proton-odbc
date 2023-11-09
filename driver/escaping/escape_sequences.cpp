@@ -16,17 +16,17 @@ using namespace std;
 namespace {
 
 const std::map<const std::string, const std::string> fn_convert_map {
-    {"SQL_TINYINT", "toUInt8"},
-    {"SQL_SMALLINT", "toUInt16"},
-    {"SQL_INTEGER", "toInt32"},
-    {"SQL_BIGINT", "toInt64"},
-    {"SQL_REAL", "toFloat32"},
-    {"SQL_DOUBLE", "toFloat64"},
-    {"SQL_VARCHAR", "toString"},
-    {"SQL_DATE", "toDate"},
-    {"SQL_TYPE_DATE", "toDate"},
-    {"SQL_TIMESTAMP", "toDateTime"},
-    {"SQL_TYPE_TIMESTAMP", "toDateTime"},
+    {"SQL_TINYINT", "to_uint8"},
+    {"SQL_SMALLINT", "to_uint16"},
+    {"SQL_INTEGER", "to_int32"},
+    {"SQL_BIGINT", "to_int64"},
+    {"SQL_REAL", "to_float32"},
+    {"SQL_DOUBLE", "to_float64"},
+    {"SQL_VARCHAR", "to_string"},
+    {"SQL_DATE", "to_date"},
+    {"SQL_TYPE_DATE", "to_date"},
+    {"SQL_TIMESTAMP", "to_datetime"},
+    {"SQL_TYPE_TIMESTAMP", "to_datetime"},
 };
 
 #define DECLARE2(TOKEN, NAME) \
@@ -56,14 +56,14 @@ const std::map<const Token::Type, const std::string> literal_map {
 
 const std::map<const Token::Type, const std::string> timeadd_func_map {
     // {Token::SQL_TSI_FRAC_SECOND, ""},
-    {Token::SQL_TSI_SECOND, "addSeconds"},
-    {Token::SQL_TSI_MINUTE, "addMinutes"},
-    {Token::SQL_TSI_HOUR, "addHours"},
-    {Token::SQL_TSI_DAY, "addDays"},
-    {Token::SQL_TSI_WEEK, "addWeeks"},
-    {Token::SQL_TSI_MONTH, "addMonths"},
-    {Token::SQL_TSI_QUARTER, "addQuarters"},
-    {Token::SQL_TSI_YEAR, "addYears"},
+    {Token::SQL_TSI_SECOND, "add_seconds"},
+    {Token::SQL_TSI_MINUTE, "add_minutes"},
+    {Token::SQL_TSI_HOUR, "add_hours"},
+    {Token::SQL_TSI_DAY, "add_days"},
+    {Token::SQL_TSI_WEEK, "add_weeks"},
+    {Token::SQL_TSI_MONTH, "add_months"},
+    {Token::SQL_TSI_QUARTER, "add_quarters"},
+    {Token::SQL_TSI_YEAR, "add_years"},
 };
 
 
@@ -248,7 +248,7 @@ string processFunction(const StringView seq, Lexer & lex) {
         if (param.empty())
             return seq.to_string();
         lex.Consume();
-        return "replaceRegexpOne(" + param + ", '^\\\\s+', '')";
+        return "replace_regexp_one(" + param + ", '^\\\\s+', '')";
 
     } else if (fn.type == Token::DAYOFWEEK) {
         if (!lex.Match(Token::LPARENT))
@@ -258,7 +258,7 @@ string processFunction(const StringView seq, Lexer & lex) {
         if (param.empty())
             return seq.to_string();
         lex.Consume();
-        return "if(toDayOfWeek(" + param + ") = 7, 1, toDayOfWeek(" + param + ") + 1)";
+        return "if(to_day_of_week(" + param + ") = 7, 1, to_day_of_week(" + param + ") + 1)";
 /*
     } else if (fn.type == Token::DAYOFYEAR) { // Supported by ClickHouse since 18.13.0
         if (!lex.Match(Token::LPARENT))
@@ -268,7 +268,7 @@ string processFunction(const StringView seq, Lexer & lex) {
         if (param.empty())
             return seq.to_string();
         lex.Consume();
-        return "( toRelativeDayNum(" + param + ") - toRelativeDayNum(toStartOfYear(" + param + ")) + 1 )";
+        return "( to_relative_day_num(" + param + ") - to_relative_day_num(to_start_of_year(" + param + ")) + 1 )";
 */
     } else if (function_map_strip_params.find(fn.type) != function_map_strip_params.end()) {
         string result = function_map_strip_params.at(fn.type);
@@ -316,7 +316,7 @@ string processDate(const StringView seq, Lexer & lex) {
     if (data.isInvalid()) {
         return seq.to_string();
     } else {
-        return string("toDate(") + data.literal.to_string() + ")";
+        return string("to_date(") + data.literal.to_string() + ")";
     }
 }
 
@@ -357,7 +357,7 @@ string processDateTime(const StringView seq, Lexer & lex) {
     if (data.isInvalid()) {
         return seq.to_string();
     } else {
-        return string("toDateTime(") + removeMilliseconds(data.literal) + ")";
+        return string("to_datetime(") + removeMilliseconds(data.literal) + ")";
     }
 }
 

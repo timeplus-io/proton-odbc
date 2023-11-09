@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <connection-customization class='genericodbc' enabled='true' version='8.10'>
-    <vendor name='ClickHouse' />
-    <driver name='ClickHouse Driver' />
+    <vendor name='Proton ' />
+    <driver name='Proton Driver' />
     <customizations>
         <customization name='CAP_CONNECT_STORED_PROCEDURE' value='no' />
         <customization name='CAP_QUERY_GROUP_BY_ALIAS' value='no' />

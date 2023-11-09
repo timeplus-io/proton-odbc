@@ -1,0 +1,18 @@
+default_data_source:
+  driver: 'Proton ODBC Driver (Unicode)'
+  url: 'http://localhost:8123'
+  database: 'default'
+  uid: 'default'
+  pwd: ''
+invalid_data_source:
+  driver: 'Proton ODBC Driver (Unicode)'
+  url: 'http://localhost:8123'
+  database: 'system'
+  uid: 'system'
+  pwd: 'pasword'
+valid_data_source:
+  driver: 'Proton ODBC Driver (Unicode)'
+  url: 'http://localhost:8123'
+  database: 'system'
+  uid: 'system'
+  pwd: 'sys@t+'

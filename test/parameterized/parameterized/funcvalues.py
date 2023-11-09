@@ -19,7 +19,7 @@ def isNull(self, connection):
     ]
     with Given("PyODBC connection"):
         for value in values:
-            query = "SELECT isNull(?)"
+            query = "SELECT is_null(?)"
             with When(f"I run '{query}' with {repr(value)} parameter"):
                 rows = connection.query(query, [value])
                 expected = "[(0, )]"
@@ -31,21 +31,21 @@ def isNull(self, connection):
 def Null(self, connection):
     """Verify support for handling NULL value."""
     with Given("PyODBC connection"):
-        query = "SELECT isNull(?)"
+        query = "SELECT is_null(?)"
         with When(f"I run '{query}' with [None] parameter", flags=TE):
             rows = connection.query(query, [None])
             expected = "[(1, )]"
             with Then(f"the result is {expected}", flags=TE):
                 assert repr(rows) == expected, error("result did not match")
 
-        query = "SELECT arrayReduce('count', [?, ?])"
+        query = "SELECT array_reduce('count', [?, ?])"
         with When(f"I run '{query}' with [None, None] parameter", flags=TE):
             rows = connection.query(query, [None, None])
             expected = "[(0, )]"
             with Then(f"the result is {expected}", flags=TE):
                 assert repr(rows) == expected, error("result did not match")
 
-        query = "SELECT arrayReduce('count', [1, ?, ?])"
+        query = "SELECT array_reduce('count', [1, ?, ?])"
         with When(f"I run '{query}' with [1, None, None])", flags=TE):
             rows = connection.query(query, [1, None, None])
             expected = "[(1, )]"
@@ -61,5 +61,5 @@ def funcvalues(self, nullable=False):
     with Logs() as logs, PyODBCConnection(logs=logs) as connection:
         args = {"connection": connection}
 
-        Scenario("isNull", run=isNull, args=args, flags=TE)
-        Scenario("Null", run=Null, args=args, flags=TE)
+        Scenario("is_null", run=isNull, args=args, flags=TE)
+        Scenario("null", run=Null, args=args, flags=TE)
