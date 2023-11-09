@@ -17,7 +17,7 @@ is_python_3 = (sys.version_info.major == 3)
 is_windows = (os.name == 'nt')
 
 def main():
-    dsn = 'ClickHouse DSN (ANSI)'
+    dsn = 'Proton DSN (ANSI)'
 
     if len(sys.argv) >= 2:
         dsn = sys.argv[1]

@@ -26,7 +26,7 @@ TEST_F(StatementParameterBindingsTest, Missing) {
     if (!SQL_SUCCEEDED(rc))
         throw std::runtime_error("SQLFetch return code: " + std::to_string(rc));
 
-    SQLCHAR col[256] = {};
+    SQLCHAR col[8] = {};
     SQLLEN col_ind = 0;
 
     ODBC_CALL_ON_STMT_THROW(hstmt,
@@ -82,7 +82,7 @@ TEST_F(StatementParameterBindingsTest, NoBuffer) {
     if (!SQL_SUCCEEDED(rc))
         throw std::runtime_error("SQLFetch return code: " + std::to_string(rc));
 
-    SQLCHAR col[256] = {};
+    SQLCHAR col[8] = {};
     SQLLEN col_ind = 0;
 
     ODBC_CALL_ON_STMT_THROW(hstmt,
@@ -163,7 +163,7 @@ TEST_F(StatementParameterBindingsTest, DISABLED_NullStringValueForInteger) {
     if (!SQL_SUCCEEDED(rc))
         throw std::runtime_error("SQLFetch return code: " + std::to_string(rc));
 
-    SQLCHAR col[256] = {};
+    SQLCHAR col[8] = {};
     SQLLEN col_ind = 0;
 
     ODBC_CALL_ON_STMT_THROW(hstmt,
@@ -244,7 +244,7 @@ TEST_F(StatementParameterBindingsTest, DISABLED_NullStringValueForString) {
     if (!SQL_SUCCEEDED(rc))
         throw std::runtime_error("SQLFetch return code: " + std::to_string(rc));
 
-    SQLCHAR col[256] = {};
+    SQLCHAR col[8] = {};
     SQLLEN col_ind = 0;
 
     ODBC_CALL_ON_STMT_THROW(hstmt,

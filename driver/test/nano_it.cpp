@@ -125,26 +125,28 @@ void run_test(nanodbc::string const & connection_string) {
         execute(connection, NANODBC_TEXT("create stream simple_test (a int);"));
         execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (1);"));
         execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (2);"));
+        execute(connection, NANODBC_TEXT("select sleep(2)"));
         {
-            auto results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test where _tp_time > earliest_ts() limit 2;"));
+            auto results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test;"));
             show(results);
         }
         execute(connection, NANODBC_TEXT("DROP STREAM IF EXISTS default.strings;"));
         execute(connection, NANODBC_TEXT("CREATE STREAM default.strings (id uint64, str string, dt datetime DEFAULT now());"));
         execute(connection, NANODBC_TEXT("INSERT INTO default.strings (* except _tp_time) SELECT number, hex(number+100000), 1 FROM system.numbers LIMIT 100;"));
+        execute(connection, NANODBC_TEXT("select sleep(2)"));
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT count(*) FROM default.strings where _tp_time > earliest_ts() limit 1;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT count(*) FROM default.strings;"));
             show(results);
         }
         {
-            auto results = execute(connection, NANODBC_TEXT("SELECT (* except _tp_time) FROM default.strings where _tp_time > earliest_ts() LIMIT 100;"));
+            auto results = execute(connection, NANODBC_TEXT("SELECT (* except _tp_time) FROM default.strings;"));
             show(results);
         }
 
         {
             auto results = execute(connection,
                 NANODBC_TEXT("SELECT `default`.`strings`.`str` AS `platform`, sum(`default`.`strings`.`id`) AS `sum_installs_ok` FROM "
-                             "`default`.`strings` WHERE _tp_time > earliest_ts() GROUP BY `str` LIMIT 100;"));
+                             "`default`.`strings` GROUP BY `str`;"));
             show(results);
         }
 
@@ -161,14 +163,15 @@ void run_test(nanodbc::string const & connection_string) {
         execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (2, 'two');"));
         execute(connection, NANODBC_TEXT("insert into simple_test (* except _tp_time) values (3, 'tri');"));
         execute(connection, NANODBC_TEXT("insert into simple_test (b) values ('z');"));
+        execute(connection, NANODBC_TEXT("select sleep(2)"));
         nanodbc::result results
-            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test where _tp_time > earliest_ts() limit 4;"));
+            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from simple_test;"));
         show(results);
     }
 
     // Accessing results by name, or column number
     {
-        nanodbc::result results = execute(connection, NANODBC_TEXT("select a as first, b as second from simple_test where a = 1 and _tp_time > earliest_ts() limit 1;"));
+        nanodbc::result results = execute(connection, NANODBC_TEXT("select a as first, b as second from simple_test where a = 1;"));
         results.next();
         auto const value = results.get<nanodbc::string>(1);
         cout << endl << results.get<int>(NANODBC_TEXT("first")) << ", " << convert(value) << endl;
@@ -308,15 +311,16 @@ void run_test(nanodbc::string const & connection_string) {
         execute(connection, NANODBC_TEXT("create stream date_test (x datetime);"));
         //execute(connection, NANODBC_TEXT("insert into date_test values (current_timestamp);"));
         execute(connection, NANODBC_TEXT("insert into date_test (* except _tp_time) values ({fn current_timestamp});"));
+        execute(connection, NANODBC_TEXT("select sleep(2)"));
 
         nanodbc::result results
-            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test where _tp_time > earliest_ts() limit 1;"));
+            = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test;"));
         results.next();
 
         nanodbc::date date = results.get<nanodbc::date>(0);
         cout << endl << date.year << "-" << date.month << "-" << date.day << endl;
 
-        results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test where _tp_time > earliest_ts() limit 1;"));
+        results = execute(connection, NANODBC_TEXT("select (* except _tp_time) from date_test;"));
         show(results);
 
         execute(connection, NANODBC_TEXT("drop stream if exists date_test;"));

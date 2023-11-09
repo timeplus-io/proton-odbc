@@ -170,8 +170,8 @@ The list of configuration options recognized during the CMake generation step is
 |    `CH_ODBC_PREFER_BUNDLED_NANODBC`    |   inherits value of `CH_ODBC_PREFER_BUNDLED_THIRD_PARTIES`   | Prefer bundled over system variants of nanodbc library                                   |
 |     `CH_ODBC_RUNTIME_LINK_STATIC`      |                            `OFF`                             | Link with compiler and language runtime statically                                       |
 |   `CH_ODBC_THIRD_PARTY_LINK_STATIC`    |                             `ON`                             | Link with third party libraries statically                                               |
-|       `CH_ODBC_DEFAULT_DSN_ANSI`       |                   `ClickHouse DSN (ANSI)`                    | Default ANSI DSN name                                                                    |
-|     `CH_ODBC_DEFAULT_DSN_UNICODE`      |                  `ClickHouse DSN (Unicode)`                  | Default Unicode DSN name                                                                 |
+|       `CH_ODBC_DEFAULT_DSN_ANSI`       |                   `Proton DSN (ANSI)`                    | Default ANSI DSN name                                                                    |
+|     `CH_ODBC_DEFAULT_DSN_UNICODE`      |                  `Proton DSN (Unicode)`                  | Default Unicode DSN name                                                                 |
 |            `TEST_DSN_LIST`             | `${CH_ODBC_DEFAULT_DSN_ANSI};${CH_ODBC_DEFAULT_DSN_UNICODE}` | `;`-separated list of DSNs, each test will be executed with each of these DSNs           |
 
 Configuration options above can be specified in the first `cmake` command (generation step) in a form of `-Dopt=val`.
@@ -348,11 +348,17 @@ Then, from the main menu, select Build > Build All. Make sure that a CMake targe
 
 After that, from the main menu, select View > Terminal. In the terminal, run command:
 
-```bash
+```sh
 cmake --build build-win-vs2022-x64-RelWithDebInfo --target package --config RelWithDebInfo
 ```
 
 You can find `.msi` package in the dir `build-win-vs2022-x64-RelWithDebInfo`. Click it and the odbc will be installed.
+
+...and, optionally, run tests (note, that for non-unit tests, preconfigured driver and DSN entries must exist, that point to the binaries generated in this build folder):
+
+```sh
+cmake --build build-win-vs2022-x64-RelWithDebInfo --config RelWithDebInfo --target run_tests
+```
 
 ### Building from sources: macOS
 

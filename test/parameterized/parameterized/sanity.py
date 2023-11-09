@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import datetime
 import decimal
+import time
 
 from testflows.core import TestScenario, Given, When, Then
 from testflows.core import TE
@@ -38,37 +39,38 @@ def sanity(self):
                             "1.333, 10.123, 'fstring0')", fetch=False)
                         query("INSERT INTO ps (* except _tp_time) VALUES (2, NULL, 'test', '2019-05-25', '2019-05-25 15:00:00', "
                             "1.433, 11.124, 'fstring1')", fetch=False)
-                        query("SELECT (* except _tp_time) FROM ps where _tp_time > earliest_ts() limit 2")
+                        time.sleep(2)
+                        query("SELECT (* except _tp_time) FROM ps")
 
                     with When("I want to select using parameter of type UInt8", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [1])
+                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? ORDER BY i, s, d", [1])
 
                     with When("I want to select using parameter of type Nullable(UInt8)", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE ni = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [None])
+                        query("SELECT (* except _tp_time) FROM ps WHERE ni = ? ORDER BY i, s, d", [None])
 
                     with When("I want to select using parameter of type String", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE s = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", ["Hello, world"])
+                        query("SELECT (* except _tp_time) FROM ps WHERE s = ? ORDER BY i, s, d", ["Hello, world"])
 
                     with When("I want to select using parameter of type Date", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE d = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [datetime.date(2019,5,25)])
+                        query("SELECT (* except _tp_time) FROM ps WHERE d = ? ORDER BY i, s, d", [datetime.date(2019,5,25)])
 
                     with When("I want to select using parameter of type DateTime", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE dt = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [datetime.datetime(2005, 5, 5, 5, 5, 5)])
+                        query("SELECT (* except _tp_time) FROM ps WHERE dt = ? ORDER BY i, s, d", [datetime.datetime(2005, 5, 5, 5, 5, 5)])
 
                     with When("I want to select using parameter of type Float32", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE f = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [1.333])
+                        query("SELECT (* except _tp_time) FROM ps WHERE f = ? ORDER BY i, s, d", [1.333])
 
                     with When("I want to select using parameter of type Decimal32(3)", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE dc = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [decimal.Decimal('10.123')])
+                        query("SELECT (* except _tp_time) FROM ps WHERE dc = ? ORDER BY i, s, d", [decimal.Decimal('10.123')])
 
                     with When("I want to select using parameter of type FixedString(8)", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE fs = ? AND _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [u"fstring0"])
+                        query("SELECT (* except _tp_time) FROM ps WHERE fs = ? ORDER BY i, s, d", [u"fstring0"])
 
                     with When("I want to select using parameters of type UInt8 and String", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? and s = ? and _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1", [2, "test"])
+                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? and s = ? ORDER BY i, s, d", [2, "test"])
 
                     with When("I want to select using parameters of type UInt8, String, and Date", flags=TE):
-                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? and s = ? and d = ? and _tp_time > earliest_ts() ORDER BY i, s, d LIMIT 1",
+                        query("SELECT (* except _tp_time) FROM ps WHERE i = ? and s = ? and d = ? ORDER BY i, s, d",
                             [2, "test", datetime.date(2019,5,25)])
                 finally:
                     query("DROP STREAM ps", fetch=False)

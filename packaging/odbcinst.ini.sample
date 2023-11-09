@@ -2,17 +2,17 @@
 # and fix the absolute paths to libclickhouseodbc.so and libclickhouseodbcw.so files.
 
 [ODBC Drivers]
-ClickHouse ODBC Driver (ANSI)    = Installed
-ClickHouse ODBC Driver (Unicode) = Installed
+Proton ODBC Driver (ANSI)    = Installed
+Proton ODBC Driver (Unicode) = Installed
 
-[ClickHouse ODBC Driver (ANSI)]
-Description = ODBC Driver (ANSI) for ClickHouse
+[Proton ODBC Driver (ANSI)]
+Description = ODBC Driver (ANSI) for Proton
 Driver      = /usr/local/lib64/libclickhouseodbc.so
 Setup       = /usr/local/lib64/libclickhouseodbc.so
 UsageCount  = 1
 
-[ClickHouse ODBC Driver (Unicode)]
-Description = ODBC Driver (Unicode) for ClickHouse
+[Proton ODBC Driver (Unicode)]
+Description = ODBC Driver (Unicode) for Proton
 Driver      = /usr/local/lib64/libclickhouseodbcw.so
 Setup       = /usr/local/lib64/libclickhouseodbcw.so
 UsageCount  = 1

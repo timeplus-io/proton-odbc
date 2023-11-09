@@ -118,7 +118,7 @@ RUN mkdir -p ${BIN_DIR} \
     && cmake \
         -G Ninja \
         -DODBC_PROVIDER=${CMAKE_ODBC_PROVIDER} \
-        -DTEST_DSN_LIST="ClickHouse DSN (ANSI);ClickHouse DSN (Unicode);ClickHouse DSN (ANSI, RBWNAT)" \
+        -DTEST_DSN_LIST="Proton DSN (ANSI);Proton DSN (Unicode);Proton DSN (ANSI, RBWNAT)" \
         ${CMAKE_ADDITIONAL_FLAGS} \
         /clickhouse-odbc/ \
     && ninja
@@ -163,15 +163,15 @@ Debug     = 1
 DebugFile = \${LOG_DIR}/odbc-driver-manager-debug.log
 
 [ODBC Drivers]
-ClickHouse ODBC Driver (ANSI)    = Installed
-ClickHouse ODBC Driver (Unicode) = Installed
+Proton ODBC Driver (ANSI)    = Installed
+Proton ODBC Driver (Unicode) = Installed
 
-[ClickHouse ODBC Driver (ANSI)]
+[Proton ODBC Driver (ANSI)]
 Driver     = ${BIN_DIR}/driver/libclickhouseodbc.so
 Setup      = ${BIN_DIR}/driver/libclickhouseodbc.so
 UsageCount = 1
 
-[ClickHouse ODBC Driver (Unicode)]
+[Proton ODBC Driver (Unicode)]
 Driver     = ${BIN_DIR}/driver/libclickhouseodbcw.so
 Setup      = ${BIN_DIR}/driver/libclickhouseodbcw.so
 UsageCount = 1
@@ -185,27 +185,27 @@ Debug     = 1
 DebugFile = \${LOG_DIR}/odbc-driver-manager-debug.log
 
 [ODBC Data Sources]
-ClickHouse DSN (ANSI)         = ClickHouse ODBC Driver (ANSI)
-ClickHouse DSN (Unicode)      = ClickHouse ODBC Driver (Unicode)
-ClickHouse DSN (ANSI, RBWNAT) = ClickHouse ODBC Driver (ANSI)
+Proton DSN (ANSI)         = Proton ODBC Driver (ANSI)
+Proton DSN (Unicode)      = Proton ODBC Driver (Unicode)
+Proton DSN (ANSI, RBWNAT) = Proton ODBC Driver (ANSI)
 
-[ClickHouse DSN (ANSI)]
-Driver        = ClickHouse ODBC Driver (ANSI)
-Description   = Test DSN for ClickHouse ODBC Driver (ANSI)
+[Proton DSN (ANSI)]
+Driver        = Proton ODBC Driver (ANSI)
+Description   = Test DSN for Proton ODBC Driver (ANSI)
 Url           = \${CH_SERVER_URL}
 DriverLog     = yes
 DriverLogFile = \${LOG_DIR}/clickhouse-odbc-driver.log
 
-[ClickHouse DSN (Unicode)]
-Driver        = ClickHouse ODBC Driver (Unicode)
-Description   = Test DSN for ClickHouse ODBC Driver (Unicode)
+[Proton DSN (Unicode)]
+Driver        = Proton ODBC Driver (Unicode)
+Description   = Test DSN for Proton ODBC Driver (Unicode)
 Url           = \${CH_SERVER_URL}
 DriverLog     = yes
 DriverLogFile = \${LOG_DIR}/clickhouse-odbc-driver-w.log
 
-[ClickHouse DSN (ANSI, RBWNAT)]
-Driver        = ClickHouse ODBC Driver (ANSI)
-Description   = Test DSN for ClickHouse ODBC Driver (ANSI) that uses RowBinaryWithNamesAndTypes as data source communication default format
+[Proton DSN (ANSI, RBWNAT)]
+Driver        = Proton ODBC Driver (ANSI)
+Description   = Test DSN for Proton ODBC Driver (ANSI) that uses RowBinaryWithNamesAndTypes as data source communication default format
 Url           = \${CH_SERVER_URL}/query?default_format=RowBinaryWithNamesAndTypes
 DriverLog     = yes
 DriverLogFile = \${LOG_DIR}/clickhouse-odbc-driver.log

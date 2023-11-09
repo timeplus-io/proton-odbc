@@ -15,7 +15,7 @@ from requirements.QA_SRS003_ParameterizedQueries import *
 def parameterized(self):
     """Test suite for clickhouse-odbc support of parameterized queries.
     """
-    dsn = os.getenv("DSN", "ClickHouse DSN (ANSI)")
+    dsn = os.getenv("DSN", "Proton DSN (ANSI)")
     with Feature(f"{dsn}", flags=TE):
         Scenario(run=load("parameterized.sanity", test="sanity"), flags=TE)
         Feature(run=load("parameterized.datatypes", test="datatypes"), flags=TE)

@@ -1,6 +1,7 @@
 import datetime
 import decimal
 import uuid
+import time
 
 from testflows.core import TestFeature, TestScenario
 from testflows.core import Requirements, Feature, Scenario, Given, When, Then, TE
@@ -47,9 +48,10 @@ def check_datatype(connection, datatype, values, nullable=False, quote=False, re
                                 connection.query(f"INSERT INTO ps (* except _tp_time) VALUES ('{repr(v)}')", fetch=False)
                             else:
                                 connection.query(f"INSERT INTO ps (* except _tp_time) VALUES ({repr(v)})", fetch=False)
+                            time.sleep(2)
 
                     with When("I select all values", flags=TE):
-                        rows = connection.query(f"SELECT (* except _tp_time) FROM ps ORDER BY v WHERE _tp_time > earliest_ts() LIMIT{len(values)}")
+                        rows = connection.query(f"SELECT (* except _tp_time) FROM ps ORDER BY v")
                         if expected.get("all") is not None:
                             with Then(f"the result is {expected.get('all')}", flags=TE, format_name=False):
                                 assert repr(rows) == expected.get("all"), error("result did not match")

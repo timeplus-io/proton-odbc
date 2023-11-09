@@ -1,6 +1,12 @@
-data_source:
-  driver: 'ClickHouse ODBC Driver (Unicode)'
-  url: 'http://localhost:3218'
+default_data_source:
+  driver: 'Proton ODBC Driver (Unicode)'
+  url: 'http://localhost:8123'
   database: 'default'
   uid: 'default'
   pwd: ''
+invalid_data_source:
+  driver: 'Proton ODBC Driver (Unicode)'
+  url: 'http://localhost:8123'
+  database: 'system'
+  uid: 'system'
+  pwd: 'pasword'
