@@ -12,7 +12,7 @@ This is the experimental ODBC driver implementation for accessing Proton as a da
 
 **It is forked from [ClickHouse ODBC](https://github.com/ClickHouse/clickhouse-odbc)**, with changes to data types.
 
-For more information on Proton go to [timeplus home page](https://timeplus.com). For more information on what ODBC is go to [ODBC Overview](https://docs.microsoft.com/en-us/sql/odbc/reference/odbc-overview).
+For more information on Proton go to [Timeplus home page](https://timeplus.com). For more information on what ODBC is go to [ODBC Overview](https://docs.microsoft.com/en-us/sql/odbc/reference/odbc-overview).
 
 The canonical repo for this driver is located at [https://github.com/timeplus-io/proton-odbc](https://github.com/timeplus-io/proton-odbc).
 
