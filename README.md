@@ -1,18 +1,20 @@
-# ODBC Driver for ClickHouse  <!-- omit in toc -->
+# ODBC Driver for Proton  <!-- omit in toc -->
 
-[![Build and Test - Linux](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/Linux.yml/badge.svg)](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/Linux.yml)
-[![Build and Test - macOS](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/macOS.yml/badge.svg)](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/macOS.yml)
-[![Build and Test - Windows](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/Windows.yml/badge.svg)](https://github.com/ClickHouse/clickhouse-odbc/actions/workflows/Windows.yml)
+<!--
+[![Build and Test - Linux](https://github.com/timeplus-io/proton-odbc/actions/workflows/Linux.yml/badge.svg)](https://github.com/timeplus-io/proton-odbc/actions/workflows/Linux.yml)
+[![Build and Test - macOS](https://github.com/timeplus-io/proton-odbc/actions/workflows/macOS.yml/badge.svg)](https://github.com/timeplus-io/proton-odbc/actions/workflows/macOS.yml)
+[![Build and Test - Windows](https://github.com/timeplus-io/proton-odbc/actions/workflows/Windows.yml/badge.svg)](https://github.com/timeplus-io/proton-odbc/actions/workflows/Windows.yml)
+-->
 
 ## Introduction <!-- omit in toc -->
 
-This is the official ODBC driver implementation for accessing ClickHouse as a data source.
+This is the experimental ODBC driver implementation for accessing Proton as a data source.
 
-For more information on ClickHouse go to [ClickHouse home page](https://clickhouse.com).
+**It is forked from [ClickHouse ODBC](https://github.com/ClickHouse/clickhouse-odbc)**, with changes to data types.
 
-For more information on what ODBC is go to [ODBC Overview](https://docs.microsoft.com/en-us/sql/odbc/reference/odbc-overview).
+For more information on Proton go to [Timeplus home page](https://timeplus.com). For more information on what ODBC is go to [ODBC Overview](https://docs.microsoft.com/en-us/sql/odbc/reference/odbc-overview).
 
-The canonical repo for this driver is located at [https://github.com/ClickHouse/clickhouse-odbc](https://github.com/ClickHouse/clickhouse-odbc).
+The canonical repo for this driver is located at [https://github.com/timeplus-io/proton-odbc](https://github.com/timeplus-io/proton-odbc).
 
 See [LICENSE](LICENSE) file for licensing information.
 
@@ -43,9 +45,9 @@ See [LICENSE](LICENSE) file for licensing information.
 
 Pre-built binary packages of the release versions of the driver available for the most common platforms at:
 
-- [Releases](https://github.com/ClickHouse/clickhouse-odbc/releases)
+- [Releases](https://github.com/timeplus-io/proton-odbc/releases)
 
-The ODBC driver is mainly tested against ClickHouse server version `21.3`. Older versions of ClickHouse server as well as newer ones (with greater success) should work too. Possible complications with older version may include handling `Null` values and `Nullable` types, alternative wire protocol support, timezone handling during date/time conversions, etc.
+The ODBC driver is mainly tested against Proton server version `v1.3.18`. Older versions of Proton server as well as newer ones (with greater success) should work too.
 
 Note, that since ODBC drivers are not used directly by a user, but rather accessed through applications, which in their turn access the driver through ODBC driver manager, user have to install the driver for the **same architecture** (32- or 64-bit) as the application that is going to access the driver. Moreover, both the driver and the application must be compiled for (and actually use during run-time) the **same ODBC driver manager implementation** (we call them "ODBC providers" here). There are three supported ODBC providers:
 
@@ -53,13 +55,15 @@ Note, that since ODBC drivers are not used directly by a user, but rather access
 - **UnixODBC** - the most common ODBC provider in Unix-like systems. Theoretically, could be used in Cygwin or MSYS/MinGW environments in Windows too.
 - **iODBC** - less common ODBC provider, mainly used in Unix-like systems, however, it is the standard ODBC provider in macOS. Theoretically, could be used in Cygwin or MSYS/MinGW environments in Windows too.
 
+<!--
 If you have [Homebrew](https://brew.sh/) installed (usually applicable to macOS only, but can also be available in Linux), just execute:
 
 ```sh
 brew install clickhouse-odbc
 ```
+-->
 
-If you don't see a package that matches your platforms under [Releases](https://github.com/ClickHouse/clickhouse-odbc/releases), or the version of your system is significantly different than those of the available packages, or maybe you want to try a bleeding edge version of the code that hasn't been released yet, you can always build the driver manually from sources:
+If you don't see a package that matches your platforms under [Releases](https://github.com/timeplus-io/proton-odbc/releases), or the version of your system is significantly different than those of the available packages, or maybe you want to try a bleeding edge version of the code that hasn't been released yet, you can always build the driver manually from sources:
 
 - [Building from sources](#building-from-sources)
 
@@ -92,10 +96,10 @@ The list of DSN parameters recognized by the driver is as follows:
 
 |        Parameter        |                                                      Default value                                                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | :---------------------: | :----------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|          `Url`          |                                                          empty                                                           | URL that points to a running ClickHouse instance, may include username, password, port, database, etc. Also, see [URL query string](#url-query-string)                                                                                                                                                                                                                                                                       |
+|          `Url`          |                                                          empty                                                           | URL that points to a running Proton instance, may include username, password, port, database, etc. Also, see [URL query string](#url-query-string)                                                                                                                                                                                                                                                                       |
 |         `Proto`         | deduced from `Url`, or from `Port` and `SSLMode`: `https` if `443` or `8443` or `SSLMode` is not empty, `http` otherwise | Protocol, one of: `http`, `https`                                                                                                                                                                                                                                                                                                                                                                                            |
-|   `Server` or `Host`    |                                                    deduced from `Url`                                                    | IP or hostname of a server with a running ClickHouse instance on it                                                                                                                                                                                                                                                                                                                                                          |
-|         `Port`          |                         deduced from `Url`, or from `Proto`: `8443` if `https`, `8123` otherwise                         | Port on which the ClickHouse instance is listening                                                                                                                                                                                                                                                                                                                                                                           |
+|   `Server` or `Host`    |                                                    deduced from `Url`                                                    | IP or hostname of a server with a running Proton instance on it                                                                                                                                                                                                                                                                                                                                                          |
+|         `Port`          |                         deduced from `Url`, or from `Proto`: `8443` if `https`, `8123` otherwise                         | Port on which the Proton instance is listening                                                                                                                                                                                                                                                                                                                                                                           |
 |         `Path`          |                                                         `/query`                                                         | Path portion of the URL                                                                                                                                                                                                                                                                                                                                                                                                      |
 |   `UID` or `Username`   |                                                        `default`                                                         | User name                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |   `PWD` or `Password`   |                                                          empty                                                           | Password                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -108,7 +112,7 @@ The list of DSN parameters recognized by the driver is as follows:
 |      `CALocation`       |                                                          empty                                                           | Path to the file or directory containing the CA/root certificates (used by TLS/SSL connections, ignored in Windows)                                                                                                                                                                                                                                                                                                          |
 |    `HugeIntAsString`    |                                                          `off`                                                           | Report integer column types that may underflow or overflow 64-bit signed integer (`SQL_BIGINT`) as a `String`/`SQL_VARCHAR`                                                                                                                                                                                                                                                                                                  |
 |       `DriverLog`       |                                  `on` if `CMAKE_BUILD_TYPE` is `Debug`, `off` otherwise                                  | Enable or disable the extended driver logging                                                                                                                                                                                                                                                                                                                                                                                |
-|     `DriverLogFile`     |               `\temp\clickhouse-odbc-driver.log`  on Windows, `/tmp/clickhouse-odbc-driver.log` otherwise                | Path to the extended driver log file (used when `DriverLog` is `on`)                                                                                                                                                                                                                                                                                                                                                         |
+|     `DriverLogFile`     |               `\temp\Proton-odbc-driver.log`  on Windows, `/tmp/Proton-odbc-driver.log` otherwise                | Path to the extended driver log file (used when `DriverLog` is `on`)                                                                                                                                                                                                                                                                                                                                                         |
 
 ### URL query string
 
@@ -121,7 +125,7 @@ The list of parameters in the query string of the URL that are also recognized b
 |    `database`    |   `default`   | Database name to connect to                                                                                                                                            |
 | `default_format` | `ODBCDriver2` | Default wire format of the resulting data that the server will send to the driver. Formats supported by the driver are: `ODBCDriver2` and `RowBinaryWithNamesAndTypes` |
 
-Note, that currently there is a difference in timezone handling between `ODBCDriver2` and `RowBinaryWithNamesAndTypes` formats: in `ODBCDriver2` date and time values are presented to the ODBC application in server's timezone, wherease in `RowBinaryWithNamesAndTypes` they are converted to local timezone. This behavior will be changed/parametrized in future. If server and ODBC application timezones are the same, date and time values handling will effectively be identical between these two formats.
+Note, that currently there is a difference in timezone handling between `ODBCDriver2` and `RowBinaryWithNamesAndTypes` formats: in `ODBCDriver2` date and time values are presented to the ODBC application in server's timezone, whereas in `RowBinaryWithNamesAndTypes` they are converted to local timezone. This behavior will be changed/parametrized in the future. If server and ODBC application timezones are the same, date and time values handling will effectively be identical between these two formats.
 
 ### Troubleshooting: driver manager tracing and driver logging
 
@@ -157,7 +161,7 @@ See the exact steps for each platform in the corresponding section below:
 The list of configuration options recognized during the CMake generation step is as follows:
 
 |                 Option                 |                        Default value                         | Description                                                                              |
-| :------------------------------------: | :----------------------------------------------------------: | :--------------------------------------------------------------------------------------- |
+| :------------------------------------: |:------------------------------------------------------------:| :--------------------------------------------------------------------------------------- |
 |           `CMAKE_BUILD_TYPE`           |                       `RelWithDebInfo`                       | Build type, one of: `Debug`, `Release`, `RelWithDebInfo`                                 |
 |    `CH_ODBC_ALLOW_UNSAFE_DISPATCH`     |                             `ON`                             | Allow unchecked handle dispatching (may slightly increase performance in some scenarios) |
 |          `CH_ODBC_ENABLE_SSL`          |                             `ON`                             | Enable TLS/SSL (required for utilizing `https://` interface, etc.)                       |
@@ -170,8 +174,8 @@ The list of configuration options recognized during the CMake generation step is
 |    `CH_ODBC_PREFER_BUNDLED_NANODBC`    |   inherits value of `CH_ODBC_PREFER_BUNDLED_THIRD_PARTIES`   | Prefer bundled over system variants of nanodbc library                                   |
 |     `CH_ODBC_RUNTIME_LINK_STATIC`      |                            `OFF`                             | Link with compiler and language runtime statically                                       |
 |   `CH_ODBC_THIRD_PARTY_LINK_STATIC`    |                             `ON`                             | Link with third party libraries statically                                               |
-|       `CH_ODBC_DEFAULT_DSN_ANSI`       |                   `Proton DSN (ANSI)`                    | Default ANSI DSN name                                                                    |
-|     `CH_ODBC_DEFAULT_DSN_UNICODE`      |                  `Proton DSN (Unicode)`                  | Default Unicode DSN name                                                                 |
+|       `CH_ODBC_DEFAULT_DSN_ANSI`       |                     `Proton DSN (ANSI)`                      | Default ANSI DSN name                                                                    |
+|     `CH_ODBC_DEFAULT_DSN_UNICODE`      |                    `Proton DSN (Unicode)`                    | Default Unicode DSN name                                                                 |
 |            `TEST_DSN_LIST`             | `${CH_ODBC_DEFAULT_DSN_ANSI};${CH_ODBC_DEFAULT_DSN_UNICODE}` | `;`-separated list of DSNs, each test will be executed with each of these DSNs           |
 
 Configuration options above can be specified in the first `cmake` command (generation step) in a form of `-Dopt=val`.
@@ -278,8 +282,8 @@ You can find sample configuration for this driver here:
 These samples can be added to the corresponding configuration files using the `odbcinst` tool (assuming the package is installed under `/usr/local`):
 
 ```sh
-odbcinst -i -d -f /usr/local/share/doc/clickhouse-odbc/config/odbcinst.ini.sample
-odbcinst -i -s -l -f /usr/local/share/doc/clickhouse-odbc/config/odbc.ini.sample
+odbcinst -i -d -f /usr/local/share/doc/proton-odbc/config/odbcinst.ini.sample
+odbcinst -i -s -l -f /usr/local/share/doc/proton-odbc/config/odbc.ini.sample
 ```
 
 ### Configuration: iODBC
